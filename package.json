@@ -1,0 +1,35 @@
+{
+  "name": "hadi",
+  "version": "1.0.0",
+  "description": "Hadi Software",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir --platform win32 --arch all",
+    "dist": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alphamarket/hadi.git"
+  },
+  "author": "Dariush Hasanpoor.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alphamarket/hadi/issues"
+  },
+  "homepage": "https://github.com/alphamarket/hadi#readme",
+  "devDependencies": {
+    "electron": "^4.0.3",
+    "electron-builder": "^20.38.5"
+  },
+  "dependencies": {
+    "coffeescript": "^2.3.2",
+    "font-awesome": "^4.7.0"
+  },
+  "build": {
+    "appId": "com.electron.${name}",
+    "win": {
+      "target": "nsis"
+    }
+  }
+}
