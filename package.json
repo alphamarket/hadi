@@ -4,9 +4,7 @@
   "description": "Hadi Software",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
-    "pack": "electron-builder --dir --platform win32 --arch all",
-    "dist": "electron-builder"
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
@@ -24,7 +22,10 @@
   },
   "dependencies": {
     "coffeescript": "^2.3.2",
-    "font-awesome": "^4.7.0"
+    "ejs": "^2.6.1",
+    "ejs-electron": "^2.0.3",
+    "font-awesome": "^4.7.0",
+    "materialize-css": "^1.0.0-rc.2"
   },
   "build": {
     "appId": "com.electron.${name}",
