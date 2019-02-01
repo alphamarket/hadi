@@ -1,9 +1,16 @@
+# to enable electron env
 electron = require('electron')
+# for reloading the web content on source change
+require('electron-reload')(root_path)
+# to compile the scss files
+require('electron-middle-sass')
+# to compile .ejs files
+require('ejs-electron')
+# set ENV
+process.env.NODE_ENV = 'development'
+
 path = require('path')
 url = require('url')
-ejse = require('ejs-electron')
-# SET ENV
-process.env.NODE_ENV = 'development'
 
 `const { app, BrowserWindow, Menu, ipcMain } = electron;`
 

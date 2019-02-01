@@ -18,12 +18,14 @@
   "homepage": "https://github.com/alphamarket/hadi#readme",
   "devDependencies": {
     "electron": "^4.0.3",
-    "electron-builder": "^20.38.5"
+    "electron-builder": "^20.38.5",
+    "electron-reload": "^1.4.0"
   },
   "dependencies": {
     "coffeescript": "^2.3.2",
     "ejs": "^2.6.1",
     "ejs-electron": "^2.0.3",
+    "electron-middle-sass": "^1.0.2",
     "font-awesome": "^4.7.0",
     "materialize-css": "^1.0.0-rc.2"
   },
