@@ -1,0 +1,74 @@
+/* fallback */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../fonts/material-icons.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IranNastaliq';
+  src: url('../../fonts/IranNastaliq.eot') format('eot'),
+  url('../../fonts/IranNastaliq.ttf') format('truetype'),
+  url('../../fonts/IranNastaliq.woff') format('woff');
+}
+@font-face {
+	font-family: 'BZar';
+	src:
+		url('../../fonts/BZar.eot') format('eot'),
+		url('../../fonts/BZar.ttf') format('truetype'),
+		url('../../fonts/BZar.woff') format('woff');
+}
+/* IranSans fonts */
+@font-face {
+	font-family: 'IranSans';
+	src: url('../../fonts/IRANSansWeb.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'IranSans';
+	src: url('../../fonts/IRANSansWeb_Bold.ttf') format('truetype');
+	font-weight: bold;
+}
+@font-face {
+	font-family: 'IranSans';
+	src: url('../../fonts/IRANSansWeb_Medium.ttf') format('truetype');
+	font-weight: normal;
+}
+@font-face {
+	font-family: 'IranSans';
+	src: url('../../fonts/IRANSansWeb_Light.ttf') format('truetype');
+	font-weight: 300;
+}
+@font-face {
+	font-family: 'IranSans';
+	src: url('../../fonts/IRANSansWeb_UltraLight.ttf') format('truetype');
+	font-weight: 100;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-fa-nastaliq {
+  font-family: 'IranNastaliq', 'IranSans', 'BZar', 'Helvetica Neue', Helvetica, Arial, sans-serif!important;
+}
+
+.font-fa {
+  font-family: 'IranSans', 'BZar', 'Helvetica Neue', Helvetica, Arial, sans-serif!important;
+}
+
+.font-en {
+  font-family: 'IranSans', TimesNewRoman, Times New Roman, Times, Baskerville, Georgia, serif!important;
+}
