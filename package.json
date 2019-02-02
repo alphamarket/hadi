@@ -4,7 +4,11 @@
   "description": "Hadi Software",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist:linux": "electron-packager . Hadi --platform=linux --arch=x64 --out=dist --overwrite",
+    "dist:win32": "electron-packager . Hadi --platform=win32 --arch=x64 --out=dist --overwrite",
+    "postinstall": "electron-builder install-app-deps"
   },
   "repository": {
     "type": "git",
@@ -21,6 +25,7 @@
     "electron-debug": "^2.1.0",
     "node-sass": "^4.11.0",
     "electron-reload": "^1.4.0",
+    "electron-builder": "^20.38.5",
     "sass-loader": "^7.1.0"
   },
   "dependencies": {
@@ -29,7 +34,6 @@
     "compass-mixins": "^0.12.10",
     "ejs": "^2.6.1",
     "ejs-electron": "^2.0.3",
-    "electron-builder": "^20.38.5",
     "electron-middle-sass": "^1.0.2",
     "jquery": "^3.3.1",
     "materialize-css": "^1.0.0-rc.2"
