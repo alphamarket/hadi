@@ -12,7 +12,7 @@
 }
 
 // generate various padding/margin shortcuts
-@for $index from 0 through 100 {
+@for $index from 0 through 1024 {
   .p-#{$index} { padding: #{$index}px !important }
   .pt-#{$index} { padding-top: #{$index}px !important }
   .pr-#{$index} { padding-right: #{$index}px !important }
@@ -27,7 +27,7 @@
 
 // generate width classes.
 //  example: {.line-height-64 => line-height: 64px !important}
-@for $w from 1 through 1000 {
+@for $w from 1 through 1024 {
   .line-height-#{$w} { line-height: #{$w}px !important; }
   .height-#{$w} { height: #{$w}px !important; }
   .width-#{$w} { width: #{$w}px !important; }

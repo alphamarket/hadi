@@ -1,54 +1,49 @@
 <%- include(app_path + "/views/layouts/header.ejs") %>
  <div class="row center-align p-40" id="select-working-branch">
-   <div class="col s2 m-15 p-0">
-     <a class="btn-floating red lighten-1 btn-large waves-effect waves-red width-170 height-170 pt-57">
-       <i class="font-120 material-icons">grain</i>
-     </a>
-     <p class="font-fa-nastaliq red-text lighten-1-text font-40">
-       یگان‌ها
-     </p>
-   </div>
-   <div class="col s2 m-15 p-0">
-     <a class="btn-floating green lighten-1 btn-large waves-effect waves-light width-170 height-170 pt-60">
-       <i class="font-120 fa fa-ellipsis-h"></i>
-     </a>
-     <p class="font-fa-nastaliq green-text lighten-1-text font-40">
-       سایر اقلام فرهنگی
-     </p>
-   </div>
-   <div class="col s2 m-15 p-0">
-     <a class="btn-floating blue lighten-1 btn-large waves-effect waves-light width-170 height-170 pt-57">
-       <i class="font-120 material-icons">donut_small</i>
-     </a>
-     <p class="font-fa-nastaliq blue-text lighten-1-text font-40">
-       لوح فشرده
-     </p>
-   </div>
-   <div class="col s2 m-15 p-0">
-     <a class="btn-floating indigo lighten-1 btn-large waves-effect waves-light width-170 height-170 pt-50">
-       <i class="font-120 fa fa-book"></i>
-     </a>
-     <p class="font-fa-nastaliq indigo-text lighten-1-text font-40">
-       کتابخانه
-     </p>
-   </div>
-   <div class="col s2 m-15 p-0">
-     <a class="btn-floating purple lighten-1 btn-large waves-effect waves-light width-170 height-170 pt-60">
+   <div class="col s4 p-50">
+     <a class="btn-floating pulse pulse-hover purple lighten-1 btn-large waves-effect waves-light width-270 height-270 pt-110">
        <i class="font-120 material-icons">photo_camera</i>
+       <span class="pulse-border"></span>
      </a>
      <p class="font-fa-nastaliq purple-text lighten-1-text font-40">
        بنرها
      </p>
    </div>
+   <div class="col s4 p-50">
+     <a class="btn-floating pulse pulse-hover indigo lighten-1 btn-large waves-effect waves-light width-270 height-270 pt-100">
+       <i class="font-120 fa fa-book"></i>
+       <span class="pulse-border"></span>
+     </a>
+     <p class="font-fa-nastaliq indigo-text lighten-1-text font-40">
+       کتابخانه
+     </p>
+   </div>
+   <div class="col s4 p-50">
+     <a class="btn-floating pulse pulse-hover blue lighten-1 btn-large waves-effect waves-light width-270 height-270 pt-105">
+       <i class="font-120 material-icons">donut_small</i>
+       <span class="pulse-border"></span>
+     </a>
+     <p class="font-fa-nastaliq blue-text lighten-1-text font-40">
+       لوح فشرده
+     </p>
+   </div>
+   <div class="col s6 p-15">
+     <a class="btn-floating pulse pulse-hover red lighten-1 btn-large waves-effect waves-red width-270 height-270 pt-100">
+       <i class="font-120 material-icons">grain</i>
+       <span class="pulse-border"></span>
+     </a>
+     <p class="font-fa-nastaliq red-text lighten-1-text font-40">
+       یگان‌ها
+     </p>
+   </div>
+   <div class="col s6 p-15">
+     <a class="btn-floating pulse pulse-hover green lighten-1 btn-large waves-effect waves-light width-270 height-270 pt-110">
+       <i class="font-120 fa fa-ellipsis-h"></i>
+       <span class="pulse-border"></span>
+     </a>
+     <p class="font-fa-nastaliq green-text lighten-1-text font-40">
+       سایر اقلام فرهنگی
+     </p>
+   </div>
  </div>
-
- <script type="text/javascript">
-   $(function() {
-     $("#select-working-branch .btn-floating").hover(function() {
-       $(this).addClass('pulse')
-     }, function() {
-       $(this).removeClass('pulse')
-     })
-   })
- </script>
 <%- include(app_path + "/views/layouts/footer.ejs") %>

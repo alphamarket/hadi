@@ -20,6 +20,7 @@
     "electron": "^4.0.3",
     "electron-debug": "^2.1.0",
     "node-sass": "^4.11.0",
+    "electron-reload": "^1.4.0",
     "sass-loader": "^7.1.0"
   },
   "dependencies": {
@@ -30,7 +31,6 @@
     "ejs-electron": "^2.0.3",
     "electron-builder": "^20.38.5",
     "electron-middle-sass": "^1.0.2",
-    "electron-reload": "^1.4.0",
     "jquery": "^3.3.1",
     "materialize-css": "^1.0.0-rc.2"
   },
