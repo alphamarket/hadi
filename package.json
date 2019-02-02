@@ -35,6 +35,7 @@
     "ejs": "^2.6.1",
     "ejs-electron": "^2.0.3",
     "electron-middle-sass": "^1.0.2",
+    "globby": "^9.0.0",
     "jquery": "^3.3.1",
     "materialize-css": "^1.0.0-rc.2"
   },
