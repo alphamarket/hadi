@@ -2,6 +2,8 @@
 const electron = require('electron')
 // include path
 const path     = require('path')
+// include file-system
+const fs       = require('fs')
 // fetch remote param
 const remote = electron.remote
 // fetch the IPC renderer
@@ -45,12 +47,15 @@ window.send_request = (url, data, __callback) => {
   })
 }
 
+window.read_image = (path) => { return Buffer.from(fs.readFileSync(path)).toString('base64') }
+
 $(document).ready(function(){
   // catch links with valid links and relocate the window as desired!
   $('a[href]:not([href^="#"])').click((e) => {
     e.preventDefault();
     goto($(e.target).attr('href'))
   })
+  // send_request('/user/create', {image: read_image(_g('root_path') + "/image.jpg") }, (data) => { console.log(data) })
   // on every form's submit
   $('form').on('submit', function(e) {
     e.preventDefault()

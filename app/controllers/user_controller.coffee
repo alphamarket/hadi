@@ -1,16 +1,14 @@
 class UserController extends BaseController
+  super: -> @constructor.__super__
+
   constructor: (args) ->
     super()
-
-  fuck_action: (data) ->
-    console.log(data)
-    {
-      respose: 'fucking working!!'
-    }
-
+    
   create_action: (data) ->
-    console.log(["creating a user with: ", data])
+    require('fs').writeFileSync("out1.png", data["image"], 'base64')
     "USER #{JSON.stringify(data)} created"
+    sizeOf = require('image-size');
+    console.log(sizeOf('out1.png'))
     # () ->
       # window.location = "#{_g('app_path')}/views/home/shity.ejs"
 
