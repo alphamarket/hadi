@@ -29,6 +29,8 @@ window.send_request = (url, data, __callback) => {
   data["$@__action"] = url;
   ipcRenderer.send('url-request', data);
   ipcRenderer.on('url-request-reply', (event, data) => {
+    // convert to json object
+    data = JSON.parse(data)
     // test if callback is already a function?
     if(typeof(__callback) === "function") {
       __callback(data)

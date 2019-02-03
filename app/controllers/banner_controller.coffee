@@ -1,9 +1,11 @@
-class UserController extends BaseController
-  super: -> @constructor.__super__
+`const db = require('better-sqlite3')(database, { verbose: console.log })`
 
+class BannerController extends BaseController
   constructor: (args) ->
     super()
-    
+
+  list_action: (args) ->
+
   create_action: (data) ->
     require('fs').writeFileSync("out1.png", data["image"], 'base64')
     "USER #{JSON.stringify(data)} created"
@@ -13,4 +15,4 @@ class UserController extends BaseController
       # window.location = "#{_g('app_path')}/views/home/shity.ejs"
 
 
-module.exports = UserController
+module.exports = BannerController

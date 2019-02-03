@@ -1,0 +1,14 @@
+<%- include(app_path + "/views/layouts/header.ejs") %>
+BANNER <a href="/home/main">GO BACK</a>
+<legend>مناسبت‌ها: </legend>
+<div id="events"></div>
+<script type="text/javascript">
+  $(function() {
+    send_request("/event/list", { }, function(data) {
+      $.each(data, (_, item) => {
+        $("#events").append(item.title + "<br />")
+      }) //.map((e) => { return e.title }))
+    })
+  })
+</script>
+<%- include(app_path + "/views/layouts/footer.ejs") %>

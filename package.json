@@ -8,6 +8,7 @@
     "pack": "electron-builder --dir",
     "dist:linux": "electron-packager . Hadi --platform=linux --arch=x64 --out=dist --overwrite",
     "dist:win32": "electron-packager . Hadi --platform=win32 --arch=x64 --out=dist --overwrite",
+    "dist:win32_ia32": "electron-packager . Hadi --platform=win32 --arch=ia32 --out=dist --overwrite",
     "postinstall": "electron-builder install-app-deps"
   },
   "repository": {
@@ -22,10 +23,10 @@
   "homepage": "https://github.com/alphamarket/hadi#readme",
   "devDependencies": {
     "electron": "^4.0.3",
+    "electron-builder": "^20.38.5",
     "electron-debug": "^2.1.0",
     "node-sass": "^4.11.0",
     "electron-reload": "^1.4.0",
-    "electron-builder": "^20.38.5",
     "sass-loader": "^7.1.0"
   },
   "dependencies": {
