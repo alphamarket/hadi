@@ -3,8 +3,16 @@ class UserController extends BaseController
     super()
 
   fuck_action: (data) ->
-    () ->
-      window.location = "#{_g('app_path')}/views/home/shity.ejs"
+    console.log(data)
+    {
+      respose: 'fucking working!!'
+    }
+
+  create_action: (data) ->
+    console.log(["creating a user with: ", data])
+    "USER #{JSON.stringify(data)} created"
+    # () ->
+      # window.location = "#{_g('app_path')}/views/home/shity.ejs"
 
 
 module.exports = UserController

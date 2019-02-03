@@ -52,9 +52,9 @@ app.on('ready', function() {
     }
   });
   // handle forms submission
-  ipcMain.on("on-form-submit", (event, arg) => {
-    var _path   = arg["action"]
-    delete arg.action
+  ipcMain.on("url-request", (event, arg) => {
+    var _path   = arg["$@__action"]
+    delete arg["$@__action"]
     var parts  = _path.split('/').filter((e) => { return e.length })
     var action = parts[parts.length - 1]
     parts      = parts.slice(0, parts.length - 1)
@@ -74,9 +74,9 @@ app.on('ready', function() {
         // call the action and get the response
         eval("response = new _import()." + action + "_action(arg)")
         // validate the response
-        if(typeof(response) !== "function") response = ""
+        if(typeof(response) === "undefined" || response === null) response = { }
         // call the action and respond to the submission
-        event.sender.send("on-form-submit-reply", response.toString())
+        event.sender.send("url-request-reply", JSON.stringify(response))
       }
     }
   });
