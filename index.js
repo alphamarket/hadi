@@ -55,6 +55,7 @@ app.on('ready', function() {
   // handle forms submission
   ipcMain.on("url-request", (event, arg) => {
     var _path   = arg["$@__action"]
+    var _req_id = arg["$@__req_id"]
     delete arg["$@__action"]
     var parts  = _path.split('/').filter((e) => { return e.length })
     var action = parts[parts.length - 1]
@@ -77,7 +78,7 @@ app.on('ready', function() {
         // validate the response
         if(typeof(response) === "undefined" || response === null) response = { }
         // call the action and respond to the submission
-        event.sender.send("url-request-reply", JSON.stringify(response))
+        event.sender.send("url-request-reply", JSON.stringify({ req_id: _req_id, response: response }))
       }
     }
   });
