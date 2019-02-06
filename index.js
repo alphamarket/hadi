@@ -8,16 +8,17 @@ require('coffeescript').register();
 // require(app_path + '/controllers/main')
 // to enable electron env
 const electron = require('electron');
-// for reloading the web content on source change
-require('electron-reload')(root_path, {
-  electron: root_path + "/node_modules/electron/dist/electron"
-});
+// for `development` env.
+if(process.env.NODE_ENV === "development") {
+  // for reloading the web content on source change
+  require('electron-reload')(root_path, {
+    electron: require(root_path + "/node_modules/electron")
+  });
+}
 // to compile .ejs files
 require('ejs-electron');
 // enable the base controller
 require(app_path + '/controllers/base_controller');
-// set ENV
-process.env.NODE_ENV = 'development';
 
 const url  = require('url');
 const path = require('path');
@@ -38,8 +39,12 @@ app.on('ready', function() {
       nodeIntegration: true
     }
   });
-  mainWindow.toggleDevTools();
+  // maximize the window
   mainWindow.maximize();
+  // for `development` env.
+  if(process.env.NODE_ENV === "development") {
+    mainWindow.toggleDevTools();
+  }
   // Load html in window
   mainWindow.loadURL(url.format({
     pathname: path.join(app_path, 'views/home/main.ejs'),
