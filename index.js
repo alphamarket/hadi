@@ -8,7 +8,7 @@ global.database = root_path + "/database.json"
 JsonDB = require('node-json-db');
 // load the db, auto-store to db, write not-human-readable
 global.db = new JsonDB(database, true, false)
-
+// register `.coffee` file extension to get processed
 require('coffeescript').register();
 // require(app_path + '/controllers/main')
 // to enable electron env
