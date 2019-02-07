@@ -4,6 +4,10 @@ global.assets_path  = app_path + "/assets"
 global.node_modules_path = root_path + "/node_modules"
 // global.database = root_path + "/hadi.sqlite"
 global.database = root_path + "/database.json"
+// load and init database instance
+JsonDB = require('node-json-db');
+// load the db, auto-store to db, write not-human-readable
+global.db = new JsonDB(database, true, false)
 
 require('coffeescript').register();
 // require(app_path + '/controllers/main')
@@ -55,6 +59,7 @@ app.on('ready', function() {
   // Quit app when closed
   mainWindow.on('closed', function() {
     if (process.platform !== 'darwin') {
+      db.save(true)
       app.quit();
     }
   });
