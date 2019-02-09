@@ -53,7 +53,7 @@ db.select = (path, where) ->
       out.push(data) if(where($.clone(data), key))
   out
 
-db.update = (path, update, where) ->
+db.update = (path, where, update) ->
   return if db.is_read_only(path)
   db.select(path, where).forEach (item, key) ->
     update(item, key);

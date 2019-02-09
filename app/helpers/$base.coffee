@@ -7,6 +7,34 @@ module.exports = {
       text += possible.charAt(Math.floor(Math.random() * possible.length))
     text
 
+  trim: (str, complete = false) ->
+    str = str.replace(/^[\n\t\r ]*/g, "").replace(/[\n\t\r ]*$/g, "")
+    str = str.replace(/[\n\t\r ]+/g, " ") if complete
+    str
+
+  map: (data, callback) ->
+    if Array.isArray(data)
+      data.map(callback)
+    else
+      for key of data
+        if typeof(data[key]) is "object"
+          data[key] = @map(data[key], callback)
+        else
+          data[key] = callback(data[key])
+      data
+
+  response_success: (resp) ->
+    {
+      status: "ok",
+      response: resp
+    }
+
+  response_fail: (resp) ->
+    {
+      status: "failed",
+      response: resp
+    }
+
   bench_mark: (callback) ->
     millisec_to_s = (millisec) ->
       seconds = (millisec / 1000).toFixed(0)

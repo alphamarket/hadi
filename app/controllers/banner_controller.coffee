@@ -1,4 +1,4 @@
-`const db = require('better-sqlite3')(database, { verbose: console.log })`
+require("#{app_path}/helpers/include_all")
 
 class BannerController extends BaseController
   constructor: (args) ->

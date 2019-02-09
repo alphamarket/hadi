@@ -1,0 +1,165 @@
+<%- include(app_path + "/views/layouts/header.ejs") %>
+<div class="font-56 purple-text mb-15">
+  <i class="font-56 material-icons" style="position: relative; top: 20px;">grain</i>
+  یگان‌ها
+  <hr class="purple m-0 height-2" />
+</div>
+<div class="row p-40 center-align" style='padding-top: 10px !important'>
+  <div class="col s12">
+    <div class="row">
+      <div class="input-field col s6 left-align">
+        <a class="waves-effect waves-light btn modal-trigger" href="#new-unit-modal" style="position: relative; top: 20px"><span class="fa fa-plus"></span> یگان جدید</a>
+      </div>
+      <div class="input-field col s6">
+        <i class="material-icons prefix">search</i>
+        <input id="units_search" type="text" class="validate" class="mr-20" placeholder="عبارت مورد نظر خود را جستجو کنید.">
+      </div>
+    </div>
+  </div>
+  <div class="col s12">
+    <div id="units" class="center-align pr-20">
+      <table class="right-align highlight-bundled">
+        <thead>
+          <tr>
+            <th class="width-60">ردیف</th>
+            <th>عنوان</th>
+            <th>شماره تماس</th>
+            <th>آخرین ویرایش</th>
+            <th class="width-190">گزینه‌ها</th>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="new-unit-modal" class="modal">
+    <form action="/units/create" callback=after_create_unit>
+      <div class="modal-content right-align">
+        <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><span class="fa fa-plus"></span> یگان جدید</h4>
+        <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title hide on-edit"><span class="fa fa-edit"></span> ویرایش یگان</h4>
+          <div class="row right-align">
+            <div class="input-field col s6">
+              <i class="material-icons prefix">phone</i>
+              <input id="icon_telephone" type="tel" class="validate" placeholder="شماره تماس (اختیاری)" name="tel">
+            </div>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="icon_prefix" type="text" class="validate" placeholder="عنوان" name="title" autofocus>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">subdirectory_arrow_left</i>
+              <textarea id="icon_prefix" type="text" class="validate" placeholder="آدرس (اختیاری)" name="address"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #e7e7e7">
+          <button type=submit class="waves-effect waves-green btn-flat green-text"><span class="fa fa-check"></span> ثبت اطلاعات</button>
+          <button type=reset class="modal-close waves-effect waves-red btn-flat red-text left"><span class="fa fa-times"></span> انصراف</button>
+        </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript">
+  var units = []
+  function add_unit_to_table(unit) {
+    var $cont = $("#units table tbody")
+    $cont.append(`<tr row-id="u${unit.id}" data-id="${unit.id}"></tr>`)
+    $cont = $cont.find('tr:last')
+    $cont.append("<td rowspan=2>" + to_persian_numeric(unit.id) + "</td>")
+    $cont.append("<td title>" + to_persian_numeric(unit.title) + "</td>")
+    $cont.append("<td tel>" + (unit.tel.length ? to_persian_numeric(unit.tel) : "-" ) + "</td>")
+    $cont.append("<td updated_at>" + to_persian_numeric(moment(new Date(unit.updated_at)).format('jYYYY/jM/jD ~ HH:mm')) + "</td>")
+    $cont.append("<td rowspan=2 ><a href='#!edit'><span class='fa fa-edit'></span> ویرایش</a> / <a href='#!delete' class='red-text'><span class='fa fa-trash'></span> حذف</a></td>")
+    $cont.closest('tbody').append("<tr row-id='u" + unit.id + "' data-id='" + unit.id + "'><td colspan=3><b>آدرس:</b> <span address>" + (unit.address.length ? to_persian_numeric(unit.address) : "-" ) + "</span></td></tr>")
+    $cont.data('rel-obj', unit)
+    $cont.find('a[href="#!edit"]').click(() => {
+      var modal = modals[0]
+      unit = $cont.data('rel-obj')
+      var prev_onclose = modal.options.onCloseEnd
+      var prev_action = modal.$el.find('form').attr('action')
+      var prev_callback = modal.$el.find('form').attr('callback')
+      modal.$el.find('form').attr('action', '/units/update')
+      modal.$el.find('form').attr('callback', 'after_edit_unit')
+      modal.$el.find('h4.modal-title').addClass('hide')
+      modal.$el.find('h4.modal-title.on-edit').removeClass('hide')
+      modal.$el.find('[name=title]').val(unit.title)
+      modal.$el.find('[name=tel]').val(unit.tel)
+      modal.$el.find('[name=address]').val(unit.address)
+      modal.$el.find('form').append('<input type=hidden value="' + unit.id + '" name=id />')
+      modal.options.onCloseEnd = () => {
+        modal.options.onCloseEnd = prev_onclose
+        modal.$el.find('form').attr('action', prev_action)
+        modal.$el.find('form input[type=hidden][name=id]').remove()
+        modal.$el.find('h4.modal-title').removeClass('hide')
+        modal.$el.find('h4.modal-title.on-edit').addClass('hide')
+        modal.$el.find('form')[0].reset()
+      }
+      modal.open()
+    })
+    $cont.find('a[href="#!delete"]').click(() => {
+      console.log('edit')
+    })
+    return $cont
+  }
+  function after_edit_unit (resp) {
+    if(is_success_response(resp)) {
+      unit = response_data(resp)
+      unit.updated_at = moment(new Date(unit.updated_at)).format('jYYYY/jM/jD ~ HH:mm')
+      for (var key in unit)
+        $(`#units tr[data-id=${unit.id}] [${key}]`).html(to_persian_numeric(unit[key].length ? unit[key] : "-"))
+      $(`#units tr[data-id=${unit.id}]`).addClass('blue lighten-5')
+      setTimeout(() => { $(`#units tr[data-id=${unit.id}]`).removeClass('blue lighten-5') }, 3500)
+      close_all_models()
+      refresh_events()
+    }
+  }
+  function after_create_unit (resp) {
+    if(is_success_response(resp)) {
+      unit = response_data(resp)
+      units.push(unit)
+      $row = add_unit_to_table(unit)
+      $row.addClass('blue lighten-5').next('tr').addClass('blue lighten-5')
+      setTimeout(() => { $row.removeClass('blue lighten-5').next('tr').removeClass('blue lighten-5') }, 3500)
+      close_all_models()
+      refresh_events()
+    }
+  }
+  $(function() {
+    send_request("/units/list", { }, function(resp) {
+      if(is_success_response(resp)) {
+        units = response_data(resp)
+        $("#units table tbody").html('')
+        for (var unit of units) { add_unit_to_table(unit) }
+      }
+    })
+    var units_search_timeout = null
+    $('#units_search').off('keyup').on('keyup', () => {
+      clearTimeout(units_search_timeout)
+      if($('#units_search').val().trim().length === 0) {
+        $("#units table tbody").html('')
+        for (var unit of units) { add_unit_to_table(unit) }
+        return
+      }
+      units_search_timeout = setTimeout(() => {
+        var rex = new RegExp("\s?(" + to_persian_numeric($('#units_search').val().trim()).split(' ').join("|") + ")\s?", "gi")
+        found = units.filter((e) => {
+          for (var key in e) if(e[key].toString().match(rex)) return true
+          return false
+        })
+        found = found.map((e) => {
+          e = clone(e)
+          for (var key in e)
+            e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
+          return e
+        })
+        $("#units table tbody").html('')
+        for (var unit of found) { add_unit_to_table(unit) }
+        if(!found.length) {
+          $("#units table tbody").append('<tr><td colspan=5 class="center-align bold"><span class="fa fa-times"></span> موردی یافت نشد!</td></tr>')
+        }
+      }, 500);
+    })
+  })
+</script>
+<%- include(app_path + "/views/layouts/footer.ejs") %>

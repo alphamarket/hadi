@@ -7,6 +7,11 @@
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script src="<%= node_modules_path %>/materialize-css/dist/js/materialize.min.js"></script>
     <script src="<%= node_modules_path %>/jquery/dist/jquery.min.js"></script>
+    <script src="<%= node_modules_path %>/autosize/dist/autosize.min.js"></script>
+    <script src="<%= node_modules_path %>/moment/min/moment.min.js"></script>
+    <script src="<%= node_modules_path %>/moment-jalaali/build/moment-jalaali.js"></script>
+    <script src="<%= assets_path %>/javascripts/extensions.js"></script>
+    <script src="<%= assets_path %>/javascripts/backbone.js"></script>
     <script src="<%= assets_path %>/javascripts/application.js"></script>
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
@@ -25,9 +30,14 @@
             عقیدتی-سیاسی
           </p>
         </li>
-        <li><a href="#!"><i class="material-icons">cloud</i>First Link</a></li>
-        <li><a href="#!"><i class="material-icons">cloud</i>Second Link</a></li>
-        <li><a href="#!" class="red-text" onclick="require('electron').remote.getCurrentWindow().close()"><span class="fas fa-sign-out-alt fa-2x ml-5" style="position: relative; top: 7px"></span> خروج از برنامه</a></li>
+        <li><a href="#!"><span class="material-icons">photo_camera</span> بنرها</a></li>
+        <li><a href="/home/unit"><span class="material-icons">grain</span> یگان‌ها</a></li>
+        <li><a href="#!" class="red-text" onclick="require('electron').remote.getCurrentWindow().close()"><span class="fas fa-sign-out-alt fa-2x ml-5"></span> خروج از برنامه</a></li>
       </ul>
+
+      <style media="screen">
+        #slide-out.sidenav .material-icons,
+        #slide-out.sidenav .fas { position: relative; top: 7px }
+      </style>
 
       <div class="col s10 pr-10 pt-15">

@@ -16,9 +16,13 @@ const electron = require('electron');
 // for `development` env.
 if(process.env.NODE_ENV === "development") {
   // for reloading the web content on source change
-  require('electron-reload')(root_path, {
-    electron: require(root_path + "/node_modules/electron")
-  });
+  require('electron-reload')([
+      `${root_path}/**/*.js`,
+      `${root_path}/**/*.css`,
+      `${root_path}/**/*.ejs`,
+    ], {
+      electron: require(root_path + "/node_modules/electron")
+    });
 }
 // to compile .ejs files
 require('ejs-electron');
@@ -59,7 +63,11 @@ app.on('ready', function() {
   // Quit app when closed
   mainWindow.on('closed', function() {
     if (process.platform !== 'darwin') {
-      db.save(true)
+      // while preventing the null-write of databse
+      if(Object.keys(db.getData('/')).length)
+        // save any changes to database
+        db.save(true)
+      // quit the database
       app.quit();
     }
   });
@@ -68,6 +76,7 @@ app.on('ready', function() {
     var _path   = arg["$@__action"]
     var _req_id = arg["$@__req_id"]
     delete arg["$@__action"]
+    delete arg["$@__req_id"]
     var parts  = _path.split('/').filter((e) => { return e.length })
     var action = parts[parts.length - 1]
     parts      = parts.slice(0, parts.length - 1)
