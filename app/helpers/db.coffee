@@ -45,6 +45,7 @@ db.iterate_over = (path, callback) ->
 
 db.select = (path, where) ->
   out = []
+  return [] if not db.exists(db.route_to(path))
   collection = db.collection(path)
   if not where
     out = collection
@@ -65,14 +66,14 @@ db.insert = (path, data) ->
   db.push(path, { meta: { count: 0 }, data: [] }) if not db.exists(path)
   collection = db.collection(path)
   meta = db.meta(path, false)
-  [data]
-    .flat()
-    .forEach((item, index) ->
-      item.created_at = new Date();
-      item.updated_at = new Date();
-      collection.push(item)
-      item.id = (++meta.count)
-    )
+  data = [data].flat()
+  for item in data
+    item.created_at = new Date();
+    item.updated_at = new Date();
+    collection.push(item)
+    item.id = (++meta.count)
+  return data if data.length > 1
+  data[0]
 
 db.delete = (path, where) ->
   return if not db.exists(db.route_to(path)) or db.is_read_only(path)

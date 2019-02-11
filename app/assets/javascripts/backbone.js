@@ -29,24 +29,41 @@ window.is_success_response = (resp) => { return typeof(resp["status"]) === "unde
 
 window.is_fail_response = (resp) => { return typeof(resp["status"]) !== "undefined" && resp["status"].toLowerCase() === "failed" }
 
+window.validate_response = (resp) => {
+  if(is_success_response(resp))
+    return true
+  else if (typeof(response_data(resp).message) !== "undefined")
+    alert(response_data(resp).message)
+  else
+    alert('خطایی رخ داده است؛ لطفا دوباره تلاش کنید یا امکان اجرای مورد مقدور نمی باشد.')
+  return false
+}
+
 window.response_data = (resp) => { return resp["response"] }
 
-window.send_request = (url, data, __callback) => {
+window.send_request = (url, data, __callback, synced = false) => {
   // create a request pool if not exists
-  if(typeof(window.reguest_pool) !== "object") window.request_pool = { }
+  if(typeof(window.request_pool) !== "object") window.request_pool = { }
   // geneate a request id
   var req_id = Object.keys(window.request_pool).length;
+  // fetch any older duplicate-active links to current url with the same data
+  window.old_links = Object.values(window.request_pool).filter((req) => { return JSON.stringify(data) === JSON.stringify(req.data) && url === req.url })
+  // prevent duplicate request at the same time!
+  if(old_links.length) {
+    for (link of old_links)
+      ipcRenderer.removeAllListeners(`url-request-reply-${link.url}-${link.req_id}`)
+  }
   // add the request to the request pool
   window.request_pool[req_id] = {
     url: url,
     data: data,
+    req_id: req_id,
     callback: __callback
   }
   // append meta data to the original data
   data["$@__action"] = url;
   data["$@__req_id"] = req_id;
-  ipcRenderer.send('url-request', data);
-  ipcRenderer.once('url-request-reply', (event, data) => {
+  var handle_response = (event, data) => {
     // convert to object
     data = JSON.parse(data)
     // fetch request id
@@ -67,14 +84,21 @@ window.send_request = (url, data, __callback) => {
       // test if this is inline function?
       if(meta.callback.trim().match(/^function\(.*\)\s*{.*}$/gi)) {
         // [work-around] eval the function and call it with data as its arg.
-        eval("var __callback__ = " + meta.callback + "(JSON.parse(data))")
+        eval(`var __callback__ = ${meta.callback}(JSON.parse(data))`)
       // test if this is function?
       } else if(typeof(eval(meta.callback)) === "function") {
         // eval the function and call it with data as its arg
         eval(meta.callback)(data)
       }
     }
-  })
+  }
+  if(synced) {
+    data["$@__synced"] = true
+    handle_response(undefined, ipcRenderer.sendSync('url-request', data))
+  } else {
+    ipcRenderer.send('url-request', data)
+    ipcRenderer.once(`url-request-reply-${url}-${req_id}`, handle_response)
+  }
 }
 
 window.to_latin_numeric = function(num) {
@@ -88,6 +112,12 @@ window.to_persian_numeric = function(num) {
     return "۰۱۲۳۴۵۶۷۸۹"[c];
   });
 };
+
+window.is_iterable = function(obj) {
+  // checks for null and undefined
+  if (obj == null) { return false; }
+  return typeof obj[Symbol.iterator] === 'function';
+}
 
 window.clone = function(obj) {
   var flags, key, newInstance;
@@ -122,4 +152,4 @@ window.clone = function(obj) {
 window.close_all_models = () => { for (var modal of modals) { modal.close() } }
 
 // send_request('/user/create', {image: read_image(_g('root_path') + "/image.jpg") }, (data) => { console.log(data) })
-window.read_image = (path) => { return Buffer.from(fs.readFileSync(path)).toString('base64') }
+window.read_file = (path) => { return Buffer.from(fs.readFileSync(path)).toString('base64') }

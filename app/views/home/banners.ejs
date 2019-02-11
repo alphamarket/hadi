@@ -1,0 +1,232 @@
+<%- include(app_path + "/views/layouts/header.ejs") %>
+<div class="font-56 purple-text mb-15">
+  <i class="font-56 material-icons" style="position: relative; top: 20px;">photo_camera</i>
+  بنرها
+  <hr class="purple m-0 height-2" />
+</div>
+<div class="row p-40 center-align" style='padding-top: 10px !important'>
+  <div class="col s12">
+    <div class="row">
+      <div class="input-field col s6 left-align">
+        <a class="waves-effect waves-light btn modal-trigger" href="#new-banner-modal" style="position: relative; top: 20px"><span class="fa fa-plus"></span> بنر جدید</a>
+      </div>
+      <div class="input-field col s6">
+        <i class="material-icons prefix">search</i>
+        <input id="last_name" type="text" class="validate" class="mr-20" placeholder="عبارت مورد نظر خود را جستجو کنید.">
+        <!-- <span class="helper-text" data-error="wrong" data-success="right"><span class="fa fa-search"></span> جستجو کنید.</span> -->
+      </div>
+    </div>
+  </div>
+  <div class="col s12">
+    <div id="events" class="center-align pr-20"></div>
+  </div>
+  <div class="col s12 mt-20">
+    <div id="banners" class="center-align pr-20">
+      <table class="right-align highlight-bundled">
+        <thead>
+          <tr>
+            <th class="width-60">ردیف</th>
+            <th>عنوان</th>
+            <th>یگان تحویل گیرنده</th>
+            <th>تاریخ تحویل</th>
+            <th>تاریخ عودت</th>
+            <th class="width-190">گزینه‌ها</th>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <style media="screen">
+    .select-dropdown { padding-right: 0; direction: rtl; }
+    .dropdown-content li { text-align: unset }
+  </style>
+  <div id="new-banner-modal" class="modal">
+    <form action="/banner/create" callback=after_create_banner>
+      <div class="modal-content right-align">
+        <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><span class="fa fa-plus"></span> بنر جدید</h4>
+        <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title hide on-edit"><span class="fa fa-edit"></span> ویرایش بنر</h4>
+          <div class="row right-align">
+            <div class="input-field col s6">
+              <select id="units-list" class="browser-default" style="background-color: transparent;" name="unit">
+                <option value="" disabled selected>یگان تحویل گیرنده را انتخاب کنید.</option>
+                <option value="">بدون یگان تحویل گیرنده!</option>
+              </select>
+            </div>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="icon_prefix" type="text" class="validate" placeholder="عنوان" name="title" autofocus required>
+            </div>
+            <hr class="col s12"/>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">timer_off</i>
+              <input id="icon_prefix" type="text" class="date" placeholder="تاریخ عودت (مثال: ۱۳۹۸/۰۷/۱۳)" name="return_date" value="1398/07/13">
+            </div>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">timer</i>
+              <input id="icon_prefix" type="text" class="date" placeholder="تاریخ تحویل (مثال: ۱۳۹۸/۰۲/۲۰)" name="pass_date" value="1398/02/20">
+            </div>
+            <hr class="col s12"/>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">subdirectory_arrow_left</i>
+              <textarea id="icon_prefix" type="text" class="validate" placeholder="توضیحات خود را در مورد بنر در اینجا بنویسید." name="desc" style="min-height: 100px !important"></textarea>
+            </div>
+            <hr class="col s12"/>
+            <div class="col s12">
+              <b><span class="material-icons ml-20" style="position: relative; top: 7px">cloud_upload</span> فایل عکس بنر را بارگذاری کنید.</b>
+              <input type="file" accept="image/x-png, image/jpeg" class="left" name="image" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #e7e7e7">
+          <button type=submit class="waves-effect waves-green btn-flat green-text"><span class="fa fa-check"></span> ثبت اطلاعات</button>
+          <button type=reset class="modal-close waves-effect waves-red btn-flat red-text left"><span class="fa fa-times"></span> انصراف</button>
+        </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript">
+  var units = []
+  var banners = []
+  function add_banner_to_table(banner) {
+    if(typeof(banner) === "undefined") return;
+    // window.banner = banner
+    var $cont = $("#banners table tbody")
+    var unit = undefined
+    if(typeof(banner.unit) !== "undefined")
+      unit = units.filter((_u) => { return banner.unit.toString() === _u.id.toString() })[0]
+    $cont.append(`<tr row-id="u${banner.id}" data-id="${banner.id}"></tr>`)
+    $cont = $cont.find('tr:last')
+    $cont.append("<td rowspan=2>" + to_persian_numeric(banner.id) + "</td>")
+    $cont.append("<td title>" + to_persian_numeric(banner.title) + "</td>")
+    $cont.append("<td unit>" + (typeof(unit) !== "undefined" ? to_persian_numeric(unit.title) : "-" ) + "</td>")
+    $cont.append("<td updated_at>" + (banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : "-") + "</td>")
+    $cont.append("<td updated_at>" + (banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.return_date)).format('jYYYY/jMM/jDD')) : "-") + "</td>")
+    $cont.append("<td rowspan=2 ><a href='#!edit'><span class='fa fa-edit'></span> ویرایش</a> / <a href='#!delete' class='red-text'><span class='fa fa-trash'></span> حذف</a></td>")
+    $cont.closest('tbody').append("<tr row-id='u" + banner.id + "' data-id='" + banner.id + "'><td colspan=4><b>توضیحات:</b> <span desc>" + (banner.desc.length ? to_persian_numeric(banner.desc) : "-" ) + "</span></td></tr>")
+    $cont.data('rel-obj', banner)
+    $cont.find('a[href="#!edit"]').click(() => {
+      var modal = modals[0]
+      banner = $cont.data('rel-obj')
+      var prev_onclose = modal.options.onCloseEnd
+      var prev_action = modal.$el.find('form').attr('action')
+      var prev_callback = modal.$el.find('form').attr('callback')
+      modal.$el.find('form').attr('action', '/banners/update')
+      modal.$el.find('form').attr('callback', 'after_edit_banner')
+      modal.$el.find('h4.modal-title').addClass('hide')
+      modal.$el.find('h4.modal-title.on-edit').removeClass('hide')
+      modal.$el.find('[name=title]').val(banner.title)
+      modal.$el.find(`[name=unit] > [value="${banner.unit}"]`).prop("selected", true)
+      modal.$el.find('[name=desc]').val(banner.desc)
+      modal.$el.find('form').append('<input type=hidden value="' + banner.id + '" name=id />')
+      modal.options.onCloseEnd = () => {
+        modal.options.onCloseEnd = prev_onclose
+        modal.$el.find('form').attr('action', prev_action)
+        modal.$el.find('form input[type=hidden][name=id]').remove()
+        modal.$el.find('h4.modal-title').removeClass('hide')
+        modal.$el.find('h4.modal-title.on-edit').addClass('hide')
+        modal.$el.find('form')[0].reset()
+      }
+      modal.open()
+    })
+    $cont.find('a[href="#!delete"]').click((e) => {
+      $(e.target).closest('tr[data-id]').each((_, e) => {
+        send_request("/banners/delete", { id: $(e).data('id') }, function(resp) {
+          if(validate_response(resp)) {
+            for (var banner of response_data(resp))
+              $(`#banners tr[data-id=${banner.id}]`).fadeOut(300, function() { $(this).remove(); });
+          }
+        })
+      })
+    })
+    return $cont
+  }
+  function after_create_banner(data) {
+    if(validate_response(data)) {
+      banner = response_data(data)
+      banners.push(banner)
+      $row = add_banner_to_table(banner)
+      $row.addClass('blue lighten-5').next('tr').addClass('blue lighten-5')
+      setTimeout(() => { $row.removeClass('blue lighten-5').next('tr').removeClass('blue lighten-5') }, 3500)
+      close_all_models()
+      refresh_events()
+    }
+  }
+  $(function() {
+    send_request("/units/list", { }, function(resp) {
+      window.units_loaded = true
+      if(validate_response(resp)) {
+        units = response_data(resp)
+        if(!is_iterable(units)) return;
+        for (unit of units)
+          $("#new-banner-modal #units-list").append(`<option value="${unit.id}">${unit.title}</option>`)
+      }
+    }, true);
+    send_request('/banner/list', { }, function(resp) {
+      if(validate_response(resp)) {
+        banners = response_data(resp)
+        if(!is_iterable(units)) return;
+        $("#banners table tbody").html('')
+        for (var banner of banners) { add_banner_to_table(banner) }
+      }
+    })
+    send_request("/event/list", { }, function(data) {
+      $("#events").html('')
+      var build_event_button = (title, options = { }) => {
+        var out = '<a class="waves-effect waves-light btn ml-20 green lighten-2" data-event '
+        for (key in options) out += key + "='" + options[key] + "' "
+        out += "><span class='fa fa-check'></span> " + title + "</a>";
+        return out
+      }
+      $("#events").append(
+        build_event_button(
+          "همه موارد", {
+            checked: "true",
+            id: "events-all-btn",
+          }
+        )
+      )
+      $.each(data, (_, item) => { $("#events").append(build_event_button(item.title, { "data-id": item.id, checked: "true" })) })
+      setTimeout(function() {
+        change_check = ($this) => {
+          if(!$this.attr('checked')) {
+            $this.removeClass('red').addClass('green');
+            $this.find('.fa').removeClass('fa-times fa-minus').addClass('fa-check');
+            $this.attr('checked', true)
+          } else {
+            $this.removeClass('green').addClass('red');
+            $this.find('.fa').removeClass('fa-check fa-minus').addClass('fa-times');
+            $this.removeAttr('checked')
+          }
+        }
+        $("#events a.btn[data-event]").click(function() {
+          console.log('shit clicked')
+          change_check($(this))
+          if($(this).attr('id') !== "events-all-btn")
+            $(this)
+              .siblings('#events-all-btn')
+                .removeAttr('checked')
+                .removeClass('red green')
+                .addClass('orange')
+                .find('.fa')
+                  .removeClass('fa-times fa-check')
+                  .addClass('fa-minus')
+        })
+        $("#events #events-all-btn").click(function() {
+          $(this)
+            .removeClass('orange')
+            .find('.fa')
+            .removeClass('fa-minus')
+          $(this)
+            .siblings('[data-event]')
+            .each(function() {
+              $(this).attr('checked', (_, attr) => { return !$('#events-all-btn').attr('checked') });
+              change_check($(this))
+            })
+
+        })
+      }, 100)
+    })
+  })
+</script>
+<%- include(app_path + "/views/layouts/footer.ejs") %>

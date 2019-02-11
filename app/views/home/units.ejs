@@ -45,7 +45,7 @@
             </div>
             <div class="input-field col s6">
               <i class="material-icons prefix">account_circle</i>
-              <input id="icon_prefix" type="text" class="validate" placeholder="عنوان" name="title" autofocus>
+              <input id="icon_prefix" type="text" class="validate" placeholder="عنوان" name="title" autofocus required>
             </div>
             <div class="input-field col s12">
               <i class="material-icons prefix">subdirectory_arrow_left</i>
@@ -69,7 +69,7 @@
     $cont.append("<td rowspan=2>" + to_persian_numeric(unit.id) + "</td>")
     $cont.append("<td title>" + to_persian_numeric(unit.title) + "</td>")
     $cont.append("<td tel>" + (unit.tel.length ? to_persian_numeric(unit.tel) : "-" ) + "</td>")
-    $cont.append("<td updated_at>" + to_persian_numeric(moment(new Date(unit.updated_at)).format('jYYYY/jM/jD ~ HH:mm')) + "</td>")
+    $cont.append("<td updated_at>" + to_persian_numeric(moment(new Date(unit.updated_at)).format('jYYYY/jMM/jDD ~ HH:mm')) + "</td>")
     $cont.append("<td rowspan=2 ><a href='#!edit'><span class='fa fa-edit'></span> ویرایش</a> / <a href='#!delete' class='red-text'><span class='fa fa-trash'></span> حذف</a></td>")
     $cont.closest('tbody').append("<tr row-id='u" + unit.id + "' data-id='" + unit.id + "'><td colspan=3><b>آدرس:</b> <span address>" + (unit.address.length ? to_persian_numeric(unit.address) : "-" ) + "</span></td></tr>")
     $cont.data('rel-obj', unit)
@@ -97,13 +97,20 @@
       }
       modal.open()
     })
-    $cont.find('a[href="#!delete"]').click(() => {
-      console.log('edit')
+    $cont.find('a[href="#!delete"]').click((e) => {
+      $(e.target).closest('tr[data-id]').each((_, e) => {
+        send_request("/units/delete", { id: $(e).data('id') }, function(resp) {
+          if(validate_response(resp)) {
+            for (var unit of response_data(resp))
+              $(`#units tr[data-id=${unit.id}]`).fadeOut(300, function() { $(this).remove(); });
+          }
+        })
+      })
     })
     return $cont
   }
   function after_edit_unit (resp) {
-    if(is_success_response(resp)) {
+    if(validate_response(resp)) {
       unit = response_data(resp)
       unit.updated_at = moment(new Date(unit.updated_at)).format('jYYYY/jM/jD ~ HH:mm')
       for (var key in unit)
@@ -115,7 +122,7 @@
     }
   }
   function after_create_unit (resp) {
-    if(is_success_response(resp)) {
+    if(validate_response(resp)) {
       unit = response_data(resp)
       units.push(unit)
       $row = add_unit_to_table(unit)
@@ -127,7 +134,7 @@
   }
   $(function() {
     send_request("/units/list", { }, function(resp) {
-      if(is_success_response(resp)) {
+      if(validate_response(resp)) {
         units = response_data(resp)
         $("#units table tbody").html('')
         for (var unit of units) { add_unit_to_table(unit) }

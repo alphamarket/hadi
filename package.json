@@ -6,9 +6,9 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist:linux": "electron-packager . Hadi --platform=linux --arch=x64 --out=dist --overwrite && cd dist/Hadi-linux-x64/resources && asar p app app.asar && rm app -rf",
-    "dist:win32": "electron-packager . Hadi --platform=win32 --arch=x64 --out=dist --overwrite && cd dist/Hadi-win32-x64/resources && asar p app app.asar && rm app -rf",
-    "dist:win32_ia32": "electron-packager . Hadi --platform=win32 --arch=ia32 --out=dist --overwrite && cd dist/Hadi-win32-ia32/resources && asar p app app.asar && rm app -rf",
+    "dist:linux": "electron-packager . Hadi --platform=linux --arch=x64 --out=dist --overwrite # && cd dist/Hadi-linux-x64/resources && asar p app app.asar && rm app -rf",
+    "dist:win32": "electron-packager . Hadi --platform=win32 --arch=x64 --out=dist --overwrite # && cd dist/Hadi-win32-x64/resources && asar p app app.asar && rm app -rf",
+    "dist:win32_ia32": "electron-packager . Hadi --platform=win32 --arch=ia32 --out=dist --overwrite # && cd dist/Hadi-win32-ia32/resources && asar p app app.asar && rm app -rf",
     "postinstall": "electron-builder install-app-deps"
   },
   "repository": {

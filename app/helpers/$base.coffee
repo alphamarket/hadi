@@ -12,6 +12,13 @@ module.exports = {
     str = str.replace(/[\n\t\r ]+/g, " ") if complete
     str
 
+  image_extension: (image) ->
+    switch image.charAt(0)
+      when '/' then 'jpg'
+      when 'i' then 'png'
+      when 'R' then 'gif'
+      when 'U' then 'webp'
+
   map: (data, callback) ->
     if Array.isArray(data)
       data.map(callback)

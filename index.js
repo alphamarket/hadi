@@ -1,9 +1,9 @@
 global.root_path = __dirname
 global.app_path  = root_path + "/app"
-global.assets_path  = app_path + "/assets"
+global.assets_path = app_path + "/assets"
+global.upload_path = root_path + "/uploads"
+global.database    = root_path + "/database.json"
 global.node_modules_path = root_path + "/node_modules"
-// global.database = root_path + "/hadi.sqlite"
-global.database = root_path + "/database.json"
 // load and init database instance
 JsonDB = require('node-json-db');
 // load the db, auto-store to db, write not-human-readable
@@ -32,6 +32,11 @@ require(app_path + '/controllers/base_controller');
 const url  = require('url');
 const path = require('path');
 const fs   = require('fs');
+
+// if uploading path folder does not exists?
+if(!fs.existsSync(upload_path))
+  // create it!
+  fs.mkdirSync(upload_path)
 
 const { app, BrowserWindow, Menu, ipcMain } = electron;
 
@@ -75,8 +80,10 @@ app.on('ready', function() {
   ipcMain.on("url-request", (event, arg) => {
     var _path   = arg["$@__action"]
     var _req_id = arg["$@__req_id"]
+    var _is_synced = arg["$@__synced"]
     delete arg["$@__action"]
     delete arg["$@__req_id"]
+    delete arg["$@__synced"]
     var parts  = _path.split('/').filter((e) => { return e.length })
     var action = parts[parts.length - 1]
     parts      = parts.slice(0, parts.length - 1)
@@ -94,11 +101,19 @@ app.on('ready', function() {
         // require the file
         const _import = require(new_path + '_controller.coffee')
         // call the action and get the response
-        eval("response = new _import()." + action + "_action(arg)")
+        eval(`response = new _import().${action}_action(arg)`)
         // validate the response
         if(typeof(response) === "undefined" || response === null) response = { }
-        // call the action and respond to the submission
-        event.sender.send("url-request-reply", JSON.stringify({ req_id: _req_id, response: response }))
+        // create the response
+        var response = JSON.stringify({ req_id: _req_id, response: response })
+        // if requesting a synced transmission
+        if(_is_synced)
+          // attach the response
+          event.returnValue = response
+        // for un-synced transmission
+        else
+          // call the action and respond to the submission
+          event.sender.send(`url-request-reply-${_path}-${_req_id}`, response)
       }
     }
   });
