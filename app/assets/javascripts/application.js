@@ -8,6 +8,10 @@ window.refresh_events = () => {
     e.preventDefault();
     goto($(e.target).attr('href'))
   })
+  $('img.clickable').off('click').on('click', (e) => {
+    e.preventDefault()
+    
+  })
   // force to reset the form on btn[reset] clicks
   $('form [type=reset]').click((e) => { $(e.target).closest('form')[0].reset() })
   // on every form's submit
@@ -71,10 +75,14 @@ window.refresh_events = () => {
     })
     $("input[type=text].date")
       .off('keydown').on('keydown', function(e) {
-        if({ 8: 'escape', 9: 'tab', 13: 'enter', 16: 'shift', 17: 'control', 18: 'alt' }[e.keyCode]) return true
-        var val = $(this).val() + to_latin_numeric(e.key)
+        if((e.originalEvent.ctrlKey && e.originalEvent.code === "KeyA") ||
+            ['ArrowLeft', 'ArrowRight', 'Backspace', 'End', 'Home', 'Delete'].includes(e.originalEvent.code))
+          return true
+        if({ 8: 'escape', 9: 'tab', 13: 'enter', 16: 'shift', 17: 'control', 18: 'alt' }[e.keyCode])
+          return true
+        var val = to_latin_numeric($(this).val() + e.key)
         if(val.length < 5)
-          return val.match(/^1(3(9[7-9]?)?|4(\d{2})?)?$/g) !== null
+          return val.match(/^1(3(9[7-9]?)?|4\d?\d?)?$/g) !== null
         else if (val.length < 8)
           return val.match(/^1(39[7-9]|4(\d{2}))[\/\- ](0[1-9]?|1[0-2]?)?$/g) !== null
         else

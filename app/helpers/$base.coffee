@@ -1,3 +1,6 @@
+fs = require('fs')
+crypto = require('crypto')
+
 module.exports = {
   random_str: (length) ->
     i = 0
@@ -18,6 +21,22 @@ module.exports = {
       when 'i' then 'png'
       when 'R' then 'gif'
       when 'U' then 'webp'
+
+  store_image: (data) ->
+    # fetch the image
+    image = data["image"]
+    # fetch the image md5 hash
+    image_hash = crypto.createHash('md5').update(image).digest("hex") if image
+    # update the image file path considering the data & image details
+    data.image = "#{upload_path}/banner-#{data.id}-#{image_hash}.#{@image_extension(image)}" if image
+    # write the image to the target file
+    fs.writeFileSync(data.image, image, 'base64') if image
+
+  to_latin_numeric: (num) ->
+    num.toString().replace(/[\u0660-\u0669\u06F0-\u06F9]/g, (c) -> return '0123456789'[c.charCodeAt(0)&0xf];)
+
+  to_persian_numeric: (num) ->
+    num.toString().replace(/[0-9]/g, (c) -> return "۰۱۲۳۴۵۶۷۸۹"[c])
 
   map: (data, callback) ->
     if Array.isArray(data)

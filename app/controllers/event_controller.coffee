@@ -5,6 +5,6 @@ class EventController extends BaseController
     super()
 
   list_action: (args) ->
-    db.select 'events'
+    $.response_success db.select 'events'
 
 module.exports = EventController

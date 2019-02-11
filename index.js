@@ -28,6 +28,8 @@ if(process.env.NODE_ENV === "development") {
 require('ejs-electron');
 // enable the base controller
 require(app_path + '/controllers/base_controller');
+// include basic helpers
+require(`${app_path}/helpers/include_all`)
 
 const url  = require('url');
 const path = require('path');
@@ -81,6 +83,11 @@ app.on('ready', function() {
     var _path   = arg["$@__action"]
     var _req_id = arg["$@__req_id"]
     var _is_synced = arg["$@__synced"]
+    // pre-process incomming args
+    arg = $.map(arg, (e) => { return $.to_latin_numeric(e) })
+    // for `development` env.
+    if(process.env.NODE_ENV === "development") { console.log("url-request", arg) }
+    // delete interal args
     delete arg["$@__action"]
     delete arg["$@__req_id"]
     delete arg["$@__synced"]

@@ -1,0 +1,55 @@
+moment = require('moment-jalaali')
+
+require("#{app_path}/helpers/include_all")
+
+class BannersController extends BaseController
+  constructor: (args) ->
+    super()
+
+  list_action: (args) ->
+    $.response_success db.select 'banners'
+
+  update_action: (data) ->
+    out = null
+    db.update 'banners',
+      (item) ->
+        # find by id
+        item.id.toString() is data.id
+      ,
+      (item) ->
+        # for each values in data
+        for key, value of data
+          # update the original data for that value
+          item[key] = value
+        # convert persian date to date object
+        item["return_date"] = moment(data.return_date, 'jYYYY/jM/jD').toDate() if data.return_date
+        # convert persian date to date object
+        item["pass_date"] = moment(data.pass_date, 'jYYYY/jM/jD').toDate() if data.pass_date
+        # store the image file
+        $.store_image item if data.image
+        # the output data
+        out = $.clone(item)
+    # save the database
+    db.save()
+    # respond success with the output data
+    $.response_success out
+
+  create_action: (data) ->
+    # prepare the data values
+    data = $.map(data, (el) -> $.trim(el, true))
+    # init the unit if not set
+    data.unit ||= ""
+    # insert the data into database and get the references object to the inserted data
+    data = db.insert 'banners', data
+    # convert persian date to date object
+    data.return_date = moment(data.return_date, 'jYYYY/jM/jD').toDate() if data.return_date
+    # convert persian date to date object
+    data.pass_date = moment(data.pass_date, 'jYYYY/jM/jD').toDate() if data.pass_date
+    # store the image file
+    $.store_image data if data.image
+    # save the db
+    db.save()
+    # send the created image to the client
+    $.response_success data
+
+module.exports = BannersController

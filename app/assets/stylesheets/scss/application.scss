@@ -19,6 +19,14 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#239f40', endColorstr='#e73827', GradientType=0 );
   }
 
+  .banner-image-thumb {
+    max-width: 200px;
+    max-height: 200px;
+    box-shadow: 0 0 20px 0 #007bffa3;
+  }
+
+  img.clickable { cursor: pointer; }
+
   .disable-page {
     padding-top: 45vh;
     position: absolute;

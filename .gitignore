@@ -3,3 +3,4 @@ dist
 Thumbs.db*
 installations
 uploads
+.sass-cache

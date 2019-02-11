@@ -111,7 +111,7 @@
   }
   function after_edit_unit (resp) {
     if(validate_response(resp)) {
-      unit = response_data(resp)
+      var unit = response_data(resp)
       unit.updated_at = moment(new Date(unit.updated_at)).format('jYYYY/jM/jD ~ HH:mm')
       for (var key in unit)
         $(`#units tr[data-id=${unit.id}] [${key}]`).html(to_persian_numeric(unit[key].length ? unit[key] : "-"))
