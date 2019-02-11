@@ -119,7 +119,20 @@
         </a>\
       </li>\
     </td>")
-    $cont.closest('tbody').append("<tr row-id='u" + banner.id + "' data-id='" + banner.id + "'><td image>" + (typeof(banner.image) !== "undefined" && banner.image.length ? `<img src='${banner.image}' class='banner-image-thumb'/>` : "<span class='orange lighten-3'>[بدون عکس!]</span>") + "</td><td colspan=3><b>توضیحات:</b> <span desc>" + (banner.desc.length ? to_persian_numeric(banner.desc) : "-" ) + "</span></td></tr>")
+    $cont.closest('tbody').append("<tr row-id='u" + banner.id + "' data-id='" + banner.id + "'>\
+        <td><center image>" +
+          (typeof(banner.image) !== "undefined" && banner.image.length ?
+            `<img src='${banner.image}' class='banner-image-thumb clickable'/><br />\
+              <span image_size class="gray-text">\
+                ${banner.image_size ? to_persian_numeric(`${banner.image_size.width} <span class="fa fa-times"></span> ${banner.image_size.height}`) : ""}\
+              </span>`
+          : "<span class='orange lighten-3'>[بدون عکس!]</span>") +
+        "</center></td>\
+        <td colspan=3>\
+          <b>توضیحات:</b> \
+            <span desc>" + (banner.desc.length ? to_persian_numeric(banner.desc) : "-" ) + "</span>\
+        </td>\
+      </tr>")
     // enable/disable the `return` link
     if(typeof(banner.pass_date) === "undefined" || !banner.pass_date.length)
       $cont.find('li > [href="#!return"]').closest('li').addClass('hide')
@@ -172,10 +185,12 @@
       var unit = undefined
       if(typeof(banner.unit) !== "undefined")
         unit = units.filter((_u) => { return banner.unit.toString() === _u.id.toString() })[0]
-      $(`#banners tr[data-id=${banner.id}] [image]`).html((typeof(banner.image) !== "undefined" && banner.image.length ? `<img src='${banner.image}' class='banner-image-thumb'/>` : "<span class='orange lighten-3'>[بدون عکس!]</span>"))
+      console.log(banner)
+      $(`#banners tr[data-id=${banner.id}] [image]`).html((typeof(banner.image) !== "undefined" && banner.image.length ? `<img src='${banner.image}' class='banner-image-thumb clickable'/><br /><span image_size class="gray-text"></span>` : "<span class='orange lighten-3'>[بدون عکس!]</span>"))
       $(`#banners tr[data-id=${banner.id}] [unit]`).html(typeof(unit) !== "undefined" ? to_persian_numeric(unit.title) : "-")
       $(`#banners tr[data-id=${banner.id}] [pass_date]`).html((banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : "-"))
       $(`#banners tr[data-id=${banner.id}] [return_date]`).html((banner.return_date.length ? to_persian_numeric(moment(new Date(banner.return_date)).format('jYYYY/jMM/jDD')) : "-"))
+      $(`#banners tr[data-id=${banner.id}] [image_size]`).html(banner.image_size ? to_persian_numeric(`${banner.image_size.width} <span class="fa fa-times"></span> ${banner.image_size.height}`) : "")
       $(`#banners tr[data-id=${banner.id}]`).addClass('blue lighten-5')
       // enable/disable the `return` link
       if(typeof(banner.pass_date) === "undefined" || !banner.pass_date.length)
@@ -184,6 +199,7 @@
         $(`#banners tr[data-id=${banner.id}] li > [href="#!return"]`).closest('li').removeClass('hide')
       setTimeout(() => { $(`#banners tr[data-id=${banner.id}]`).removeClass('blue lighten-5') }, 3500)
       close_all_models()
+      refresh_events()
     }
   }
   function after_create_banner(data) {
@@ -213,6 +229,7 @@
         if(!is_iterable(units)) return;
         $("#banners table tbody").html('')
         for (var banner of banners) { add_banner_to_table(banner) }
+        refresh_events()
       }
     })
     send_request("/event/list", { }, function(resp) {

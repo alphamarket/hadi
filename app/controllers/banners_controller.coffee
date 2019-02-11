@@ -1,3 +1,4 @@
+sizeOf = require('image-size')
 moment = require('moment-jalaali')
 
 require("#{app_path}/helpers/include_all")
@@ -25,8 +26,12 @@ class BannersController extends BaseController
         item["return_date"] = moment(data.return_date, 'jYYYY/jM/jD').toDate() if data.return_date
         # convert persian date to date object
         item["pass_date"] = moment(data.pass_date, 'jYYYY/jM/jD').toDate() if data.pass_date
-        # store the image file
-        $.store_image item if data.image
+        # if any image provided?
+        if data.image
+          # store the image file
+          $.store_image item
+          # get the size
+          item.image_size = sizeOf(item.image)
         # the output data
         out = $.clone(item)
     # save the database
@@ -45,8 +50,12 @@ class BannersController extends BaseController
     data.return_date = moment(data.return_date, 'jYYYY/jM/jD').toDate() if data.return_date
     # convert persian date to date object
     data.pass_date = moment(data.pass_date, 'jYYYY/jM/jD').toDate() if data.pass_date
-    # store the image file
-    $.store_image data if data.image
+    # if any image provided?
+    if data.image
+      # store the image file
+      $.store_image data
+      # get the size
+      data.image_size = sizeOf(data.image)
     # save the db
     db.save()
     # send the created image to the client
