@@ -13,12 +13,39 @@
       <div class="input-field col s6">
         <i class="material-icons prefix">search</i>
         <input id="banners_search" type="text" class="validate" class="mr-20" placeholder="عبارت مورد نظر خود را جستجو کنید.">
-        <!-- <span class="helper-text" data-error="wrong" data-success="right"><span class="fa fa-search"></span> جستجو کنید.</span> -->
       </div>
     </div>
   </div>
   <div class="col s12">
-    <div id="events" class="center-align pr-20"></div>
+    <div id="events" class="center-align pr-20"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></div>
+  </div>
+  <div class="col s12 mt-20 pt-20 border-top right-align">
+    <div class="row">
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" data-target=expired />
+          <span>بنرهایی که باید تحویل داده شوند</span>
+        </label>
+      </div>
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" data-target=passed />
+          <span>بنرهای تحویل داده شده</span>
+        </label>
+      </div>
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" data-target=not_passed />
+          <span>بنرهای موجود</span>
+        </label>
+      </div>
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" checked data-target=all />
+          <span>همه موارد</span>
+        </label>
+      </div>
+    </div>
   </div>
   <div class="col s12 mt-20">
     <div id="banners" class="center-align pr-20">
@@ -34,6 +61,7 @@
             <th class="width-120">گزینه‌ها</th>
         </thead>
         <tbody>
+          <tr><td colspan="7"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></td></tr>
         </tbody>
       </table>
     </div>
@@ -54,15 +82,6 @@
                 <option value="">بدون دسته‌بندی!</option>
               </select>
             </div>
-            <!-- <hr class="col s12"/>
-            <div class="input-field col s6">
-              <i class="material-icons prefix">timer_off</i>
-              <input id="icon_prefix" type="text" class="date" placeholder="تاریخ عودت (مثال: ۱۳۹۸/۰۷/۱۳) [اختیاری]" name="return_date">
-            </div>
-            <div class="input-field col s6">
-              <i class="material-icons prefix">timer</i>
-              <input id="icon_prefix" type="text" class="date" placeholder="تاریخ تحویل (مثال: ۱۳۹۸/۰۲/۲۰) [اختیاری]" name="pass_date">
-            </div> -->
             <hr class="col s12"/>
             <div class="input-field col s12">
               <i class="material-icons prefix">subdirectory_arrow_left</i>
@@ -236,6 +255,7 @@
               $el.find('[pass_date]').html('-');
               $el.find('[unit]').html('-');
               validate_due_dates($el, banner)
+              $('#banners_search').trigger('keyup')
               alert(to_persian_numeric(`بنر شماره ${banner.id} با موفقیت عودت داده شد!`))
             }
           })
@@ -253,6 +273,7 @@
         modal.options.onCloseEnd = prev_onclose
         modal.$el.find('form input[type=hidden][name=id]').remove()
         modal.$el.find('form')[0].reset()
+        $('#banners_search').trigger('keyup')
       }
       modal.open()
     })
@@ -292,144 +313,172 @@
     }
   }
   function render_with_filters(banners) {
-    $("#banners table tbody").html('')
-    var sub_banners = banners
-    // fetch filters
-    var filtered = $('#events [checked]:not(#events-all-btn)').map((_, e) => { return $(e).data('id').toString() }).toArray()
-    // if not all-checked is in effect
-    if(!$("#events-all-btn[checked]").length)
-      sub_banners = banners.filter((_b) => { return filtered.includes((_b.event || "").toString()) })
-    // foreach of sub-banners
-    for (banner of sub_banners)
-      // add the banner
-      add_banner_to_table(banner)
-    // if nothing found!
-    if(!sub_banners.length)
-      $("#banners table tbody").append('<tr><td colspan=7><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
+    $("#banners table tbody").html('<tr><td colspan="7"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></td></tr>')
+    setTimeout(function() {
+      var sub_banners = banners
+      // fetch filters
+      var filtered = $('#events [checked]:not(#events-all-btn)').map((_, e) => { return $(e).data('id').toString() }).toArray()
+      // if not all-checked is in effect
+      if(!$("#events-all-btn[checked]").length)
+        sub_banners = banners.filter((_b) => { return filtered.includes((_b.event || "").toString()) })
+      // consider the existance filter
+      switch($('[name=existance]:checked').data('target')) {
+        case 'all':
+          break;
+        case 'passed':
+          sub_banners = sub_banners.filter((_b) => { return typeof(_b.pass_date) === "string" && _b.pass_date.length })
+          break;
+        case 'not_passed':
+          sub_banners = sub_banners.filter((_b) => { return typeof(_b.pass_date) === "undefined" || !_b.pass_date || !_b.pass_date.length })
+          break;
+        case 'expired':
+          sub_banners = sub_banners.filter((_b) => {
+            var ret_date = moment(new Date(_b.return_date))
+            return _b.return_date && ret_date.toString().toLowerCase() !== "invalid date" && ret_date < moment()
+          })
+          break;
+      }
+      $("#banners table tbody").html('')
+      // foreach of sub-banners
+      for (banner of sub_banners)
+        // add the banner
+        add_banner_to_table(banner)
+      // referesh all events on the page
+      refresh_events()
+      // if nothing found!
+      if(!sub_banners.length)
+        $("#banners table tbody").append('<tr><td colspan=7><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
+    }, 400) // setTimeout
   }
   $(function() {
-    send_request("/units/list", { }, function(resp) {
-      window.units_loaded = true
-      if(validate_response(resp)) {
-        units = response_data(resp)
-        if(!is_iterable(units)) return;
-        for (unit of units)
-          $("#pass-banner-modal #units-list").append(`<option value="${unit.id}">${unit.title}</option>`)
-      }
-    }, true);
-    send_request("/event/list", { }, function(resp) {
-      if(!validate_response(resp)) return
-      var data = undefined
-      events = data = response_data(resp)
-      for (e of events)
-        $("#new-banner-modal #events-list").append(`<option value="${e.id}">${e.title}</option>`)
-      $("#events").html('')
-      var build_event_button = (title, options = { }) => {
-        var out = '<a class="waves-effect waves-light btn ml-10 green lighten-2" data-event '
-        for (key in options) out += key + "='" + options[key] + "' "
-        out += "><span class='fa fa-check'></span> " + title + "</a>";
-        return out
-      }
-      $("#events").append(
-        build_event_button(
-          "همه موارد", {
-            checked: "true",
-            id: "events-all-btn",
-          }
-        )
-      )
-      $.each(data, (_, item) => { $("#events").append(build_event_button(item.title, { "data-id": item.id, checked: "true" })) })
-      setTimeout(function() {
-        change_check = ($this) => {
-          if(!$this.attr('checked')) {
-            $this.removeClass('red').addClass('green');
-            $this.find('.fa').removeClass('fa-times fa-minus').addClass('fa-check');
-            $this.attr('checked', true)
-          } else {
-            $this.removeClass('green').addClass('red');
-            $this.find('.fa').removeClass('fa-check fa-minus').addClass('fa-times');
-            $this.removeAttr('checked')
-          }
+    setTimeout(function() {
+      send_request("/units/list", { }, function(resp) {
+        window.units_loaded = true
+        if(validate_response(resp)) {
+          units = response_data(resp)
+          if(!is_iterable(units)) return;
+          for (unit of units)
+            $("#pass-banner-modal #units-list").append(`<option value="${unit.id}">${unit.title}</option>`)
         }
-        $("#events a.btn[data-event]").click(function() {
-          change_check($(this))
-          $this = $(this)
-          setTimeout(function() { render_with_filters(banners) }, 500)
-          if($(this).attr('id') !== "events-all-btn") {
-            $(this)
-              .siblings('#events-all-btn')
-                .removeAttr('checked')
-                .removeClass('red green')
-                .addClass('orange')
-                .find('.fa')
-                  .removeClass('fa-times fa-check')
-                  .addClass('fa-minus')
-            // if all checked? check the all-in btn too!
-            if($('#events [checked]:not(#events-all-btn)').length === $('#events [data-event]:not(#events-all-btn)').length)
-              $("#events #events-all-btn").click()
+      }, true);
+      send_request("/event/list", { }, function(resp) {
+        if(!validate_response(resp)) return
+        var data = undefined
+        events = data = response_data(resp)
+        for (e of events)
+          $("#new-banner-modal #events-list").append(`<option value="${e.id}">${e.title}</option>`)
+        $("#events").html('')
+        var build_event_button = (title, options = { }) => {
+          var out = '<a class="waves-effect waves-light btn ml-10 green lighten-2" data-event '
+          for (key in options) out += key + "='" + options[key] + "' "
+          out += "><span class='fa fa-check'></span> " + title + "</a>";
+          return out
+        }
+        $("#events").append(
+          build_event_button(
+            "همه موارد", {
+              checked: "true",
+              id: "events-all-btn",
+            }
+          )
+        )
+        $.each(data, (_, item) => { $("#events").append(build_event_button(item.title, { "data-id": item.id, checked: "true" })) })
+        setTimeout(function() {
+          change_check = ($this) => {
+            if(!$this.attr('checked')) {
+              $this.removeClass('red').addClass('green');
+              $this.find('.fa').removeClass('fa-times fa-minus').addClass('fa-check');
+              $this.attr('checked', true)
+            } else {
+              $this.removeClass('green').addClass('red');
+              $this.find('.fa').removeClass('fa-check fa-minus').addClass('fa-times');
+              $this.removeAttr('checked')
+            }
           }
-        })
-        $("#events #events-all-btn").click(function() {
-          $(this)
-            .removeClass('orange')
-            .find('.fa')
-            .removeClass('fa-minus')
-          $(this)
-            .siblings('[data-event]')
-            .each(function() {
-              $(this).attr('checked', (_, attr) => { return !$('#events-all-btn').attr('checked') });
-              change_check($(this))
-            })
+          $("#events a.btn[data-event]").click(function() {
+            change_check($(this))
+            $this = $(this)
+            setTimeout(function() { $('#banners_search').trigger('keyup') }, 200)
+            if($(this).attr('id') !== "events-all-btn") {
+              $(this)
+                .siblings('#events-all-btn')
+                  .removeAttr('checked')
+                  .removeClass('red green')
+                  .addClass('orange')
+                  .find('.fa')
+                    .removeClass('fa-times fa-check')
+                    .addClass('fa-minus')
+              // if all checked? check the all-in btn too!
+              if($('#events [checked]:not(#events-all-btn)').length === $('#events [data-event]:not(#events-all-btn)').length)
+                $("#events #events-all-btn").click()
+            }
+          })
+          $("#events #events-all-btn").click(function() {
+            $(this)
+              .removeClass('orange')
+              .find('.fa')
+              .removeClass('fa-minus')
+            $(this)
+              .siblings('[data-event]')
+              .each(function() {
+                $(this).attr('checked', (_, attr) => { return !$('#events-all-btn').attr('checked') });
+                change_check($(this))
+              })
 
-        })
-      }, 100)
-    }, true)
-    send_request('/banners/list', { }, function(resp) {
-      if(validate_response(resp)) {
-        banners = response_data(resp)
-        if(!is_iterable(units)) return;
-        $("#banners table tbody").html('')
-        render_with_filters(banners)
-        refresh_events()
-      }
-    }, true)
-    var banners_search_timeout = null
-    $('#banners_search').off('keyup').on('keyup', () => {
-      clearTimeout(banners_search_timeout)
-      if($('#banners_search').val().trim().length === 0) {
-        $("#banners table tbody").html('')
-        render_with_filters(banners)
-        return
-      }
-      banners_search_timeout = setTimeout(() => {
-        var rex = new RegExp("(" + to_persian_numeric($('#banners_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
-        found = banners.filter((e) => {
-          // general search
-          for (var key in e)
-            if(typeof(e[key]) !== "undefined" && e[key] && e[key].toString().match(rex))
+          })
+        }, 100)
+      }, true)
+      send_request('/banners/list', { }, function(resp) {
+        if(validate_response(resp)) {
+          banners = response_data(resp)
+          if(!is_iterable(units)) return;
+          $("#banners table tbody").html('')
+          render_with_filters(banners)
+          refresh_events()
+        }
+      }, true)
+      // on radio-btn click
+      $("[name=existance]").change(function() {
+        $('#banners_search').trigger('keyup')
+      })
+      // on search box key press
+      var banners_search_timeout = null
+      $('#banners_search').off('keyup').on('keyup', () => {
+        clearTimeout(banners_search_timeout)
+        if($('#banners_search').val().trim().length === 0) {
+          render_with_filters(banners)
+          return
+        }
+        banners_search_timeout = setTimeout(() => {
+          var rex = new RegExp("(" + to_persian_numeric($('#banners_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
+          found = banners.filter((e) => {
+            // general search
+            for (var key in e)
+              if(typeof(e[key]) !== "undefined" && e[key] && e[key].toString().match(rex))
+                return true
+            // date search
+            for(var key of ["return_date", "pass_date"])
+              if(typeof(e[key]) !== "undefined" && e[key] && to_persian_numeric(moment(new Date(e[key])).format('jYYYY/jMM/jDD')).match(rex))
+                return true
+            // unit search
+            _eu = link_event_unit(e); unit = _eu[1]
+            if(typeof(unit) !== "undefined" && unit["title"] && unit["title"].match(rex))
               return true
-          // date search
-          for(var key of ["return_date", "pass_date"])
-            if(typeof(e[key]) !== "undefined" && e[key] && to_persian_numeric(moment(new Date(e[key])).format('jYYYY/jMM/jDD')).match(rex))
-              return true
-          // unit search
-          _eu = link_event_unit(e); unit = _eu[1]
-          if(typeof(unit) !== "undefined" && unit["title"] && unit["title"].match(rex))
-            return true
-          // fail-check
-          return false
-        })
-        found = found.map((e) => {
-          e = clone(e)
-          for (var key in e)
-            if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
-              e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
-          return e
-        })
-        $("#banners table tbody").html('')
-        render_with_filters(found)
-      }, 500);
-    })
+            // fail-check
+            return false
+          })
+          found = found.map((e) => {
+            e = clone(e)
+            for (var key in e)
+              if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
+                e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
+            return e
+          })
+          $("#banners table tbody").html('')
+          render_with_filters(found)
+        }, 500);
+      })
+    }, 50) // setTimeout
   })
 </script>
 <%- include(app_path + "/views/layouts/footer.ejs") %>

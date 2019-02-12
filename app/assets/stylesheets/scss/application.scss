@@ -35,6 +35,16 @@ body {
 
   img.clickable { cursor: pointer; }
 
+  // RTL radio buttons for materialize-css
+  [type="radio"]:not(:checked)+span, [type="radio"]:checked+span {
+    padding-right: 35px !important;
+    padding-left: unset !important;
+  }
+  [type="radio"]+span:before, [type="radio"]+span:after {
+    left: unset !important;
+    right: 0 !important;
+  }
+
   .image-display {
     position: fixed;
     top: 0; left: 0;

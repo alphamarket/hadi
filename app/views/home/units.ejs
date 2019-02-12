@@ -28,6 +28,7 @@
             <th class="width-190">گزینه‌ها</th>
         </thead>
         <tbody>
+          <tr><td colspan="5"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></td></tr>
         </tbody>
       </table>
     </div>
@@ -138,41 +139,43 @@
     }
   }
   $(function() {
-    send_request("/units/list", { }, function(resp) {
-      if(validate_response(resp)) {
-        units = response_data(resp)
-        $("#units table tbody").html('')
-        for (var unit of units) { add_unit_to_table(unit) }
-      }
-    })
-    var units_search_timeout = null
-    $('#units_search').off('keyup').on('keyup', () => {
-      clearTimeout(units_search_timeout)
-      if($('#units_search').val().trim().length === 0) {
-        $("#units table tbody").html('')
-        for (var unit of units) { add_unit_to_table(unit) }
-        return
-      }
-      units_search_timeout = setTimeout(() => {
-        var rex = new RegExp("(" + to_persian_numeric($('#units_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
-        found = units.filter((e) => {
-          for (var key in e) if(e[key].toString().match(rex)) return true
-          return false
-        })
-        found = found.map((e) => {
-          e = clone(e)
-          for (var key in e)
-            if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
-              e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
-          return e
-        })
-        $("#units table tbody").html('')
-        for (var unit of found) { add_unit_to_table(unit) }
-        if(!found.length) {
-          $("#units table tbody").append('<tr><td colspan=5 class="center-align bold"><span class="fa fa-times"></span> موردی یافت نشد!</td></tr>')
+    setTimeout(function() {
+      send_request("/units/list", { }, function(resp) {
+        if(validate_response(resp)) {
+          units = response_data(resp)
+          $("#units table tbody").html('')
+          for (var unit of units) { add_unit_to_table(unit) }
         }
-      }, 500);
-    })
+      })
+      var units_search_timeout = null
+      $('#units_search').off('keyup').on('keyup', () => {
+        clearTimeout(units_search_timeout)
+        if($('#units_search').val().trim().length === 0) {
+          $("#units table tbody").html('')
+          for (var unit of units) { add_unit_to_table(unit) }
+          return
+        }
+        units_search_timeout = setTimeout(() => {
+          var rex = new RegExp("(" + to_persian_numeric($('#units_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
+          found = units.filter((e) => {
+            for (var key in e) if(e[key].toString().match(rex)) return true
+            return false
+          })
+          found = found.map((e) => {
+            e = clone(e)
+            for (var key in e)
+              if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
+                e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
+            return e
+          })
+          $("#units table tbody").html('')
+          for (var unit of found) { add_unit_to_table(unit) }
+          if(!found.length) {
+            $("#units table tbody").append('<tr><td colspan=5 class="center-align bold"><span class="fa fa-times"></span> موردی یافت نشد!</td></tr>')
+          }
+        }, 500);
+      })
+    }, 100) // setTimeout
   })
 </script>
 <%- include(app_path + "/views/layouts/footer.ejs") %>

@@ -12,9 +12,9 @@ window.refresh_events = () => {
   $('img.clickable').off('click').on('click', (e) => {
     e.preventDefault()
     $('body .image-display').remove()
-    $('body').addClass('noscroll').append(`<div class="image-display" onclick="$(this).trigger('close')">
+    $('body').addClass('noscrollx').append(`<div class="image-display" onclick="$(this).trigger('close')">
       <img src="${$(e.target).attr('src')}" onclick="event.stopPropagation()"/>
-      <a href=#! class="btn red" onclick="$(this).closest('.image-display').trigger('close')"><span class='fa fa-times'></span></a>
+      <a href=#! class="btn red" onclick="$(this).closest('.image-display').trigger('close'); return false"><span class='fa fa-times'></span></a>
     </div>`)
     $('.image-display').off('close').on('close', function() {
       $(this).remove()
