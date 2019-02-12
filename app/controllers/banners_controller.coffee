@@ -18,6 +18,8 @@ class BannersController extends BaseController
         item.id.toString() is data.id
       ,
       (item) ->
+        # try to delete the file if the image file already exists & trying to set a new one!
+        require('fs').unlink(item.image, () -> ) if data.image
         # for each values in data
         for key, value of data
           # update the original data for that value
@@ -38,6 +40,9 @@ class BannersController extends BaseController
     db.save()
     # respond success with the output data
     $.response_success out
+
+  delete_action: (data) ->
+    $.response_success db.delete 'banners', (item) -> item.id.toString() is data.id.toString()
 
   create_action: (data) ->
     # prepare the data values

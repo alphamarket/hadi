@@ -12,7 +12,7 @@
       </div>
       <div class="input-field col s6">
         <i class="material-icons prefix">search</i>
-        <input id="last_name" type="text" class="validate" class="mr-20" placeholder="عبارت مورد نظر خود را جستجو کنید.">
+        <input id="banners_search" type="text" class="validate" class="mr-20" placeholder="عبارت مورد نظر خود را جستجو کنید.">
         <!-- <span class="helper-text" data-error="wrong" data-success="right"><span class="fa fa-search"></span> جستجو کنید.</span> -->
       </div>
     </div>
@@ -27,6 +27,7 @@
           <tr>
             <th class="width-60">ردیف</th>
             <th>عنوان</th>
+            <th>دسته‌بندی</th>
             <th>یگان تحویل گیرنده</th>
             <th>تاریخ تحویل</th>
             <th>تاریخ عودت</th>
@@ -37,27 +38,23 @@
       </table>
     </div>
   </div>
-  <style media="screen">
-    .select-dropdown { padding-right: 0; direction: rtl; }
-    .dropdown-content li { text-align: unset }
-  </style>
   <div id="new-banner-modal" class="modal">
     <form action="/banners/create" callback=after_create_banner>
       <div class="modal-content right-align">
         <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><span class="fa fa-plus"></span> بنر جدید</h4>
         <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title hide on-edit"><span class="fa fa-edit"></span> ویرایش بنر</h4>
           <div class="row right-align">
-            <div class="input-field col s6">
-              <select id="units-list" class="browser-default" style="background-color: transparent;" name="unit">
-                <option value="" disabled selected>یگان تحویل گیرنده را انتخاب کنید.</option>
-                <option value="">بدون یگان تحویل گیرنده!</option>
-              </select>
-            </div>
-            <div class="input-field col s6">
+            <div class="input-field col s12">
               <i class="material-icons prefix">account_circle</i>
               <input id="icon_prefix" type="text" class="validate" placeholder="عنوان" name="title" autofocus required>
             </div>
-            <hr class="col s12"/>
+            <div class="input-field col s12 pr-50">
+              <select id="events-list" class="browser-default border" style="background-color: transparent;" name="event">
+                <option value="" disabled selected>دسته‌بندی بنر را انتخاب کنید.</option>
+                <option value="">بدون دسته‌بندی!</option>
+              </select>
+            </div>
+            <!-- <hr class="col s12"/>
             <div class="input-field col s6">
               <i class="material-icons prefix">timer_off</i>
               <input id="icon_prefix" type="text" class="date" placeholder="تاریخ عودت (مثال: ۱۳۹۸/۰۷/۱۳) [اختیاری]" name="return_date">
@@ -65,7 +62,7 @@
             <div class="input-field col s6">
               <i class="material-icons prefix">timer</i>
               <input id="icon_prefix" type="text" class="date" placeholder="تاریخ تحویل (مثال: ۱۳۹۸/۰۲/۲۰) [اختیاری]" name="pass_date">
-            </div>
+            </div> -->
             <hr class="col s12"/>
             <div class="input-field col s12">
               <i class="material-icons prefix">subdirectory_arrow_left</i>
@@ -84,24 +81,72 @@
         </div>
     </form>
   </div>
+  <div id="pass-banner-modal" class="modal">
+    <form action="/banners/update" callback=after_edit_banner>
+      <div class="modal-content right-align">
+        <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><span class="fa fa-reply"></span> تحویل بنر</h4>
+          <div class="row right-align">
+            <div class="input-field col s12">
+              <select id="units-list" class="browser-default" style="background-color: transparent;" name="unit">
+                <option value="" disabled selected>یگان تحویل گیرنده را انتخاب کنید.</option>
+              </select>
+            </div>
+            <div class="input-field col s6">
+              <label title></label>
+            </div>
+            <hr class="col s12"/>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">timer_off</i>
+              <input id="icon_prefix" type="text" class="date" placeholder="تاریخ عودت (مثال: ۱۳۹۸/۰۷/۱۳) [اختیاری]" name="return_date">
+            </div>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">timer</i>
+              <input id="icon_prefix" type="text" class="date" placeholder="تاریخ تحویل (مثال: ۱۳۹۸/۰۲/۲۰) [اختیاری]" name="pass_date">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #e7e7e7">
+          <button type=submit class="waves-effect waves-green btn-flat green-text"><span class="fa fa-check"></span> ثبت اطلاعات</button>
+          <button type=reset class="modal-close waves-effect waves-red btn-flat red-text left"><span class="fa fa-times"></span> انصراف</button>
+        </div>
+    </form>
+  </div>
 </div>
 <script type="text/javascript">
   var units = []
+  var events = []
   var banners = []
+  function validate_due_dates($cont, banner) {
+    // enable/disable the `return/pass` link
+    if(typeof(banner.pass_date) === "undefined" || !banner.pass_date || !banner.pass_date.length) {
+      $cont.find('li > [href="#!return"]').closest('li').addClass('hide')
+      $cont.find('li > [href="#!pass"]').closest('li').removeClass('hide')
+    } else {
+      $cont.find('li > [href="#!return"]').closest('li').removeClass('hide')
+      $cont.find('li > [href="#!pass"]').closest('li').addClass('hide')
+    }
+  }
+  function link_event_unit(banner) {
+    var _unit = undefined
+    var _event = undefined
+    if(typeof(banner.unit) !== "undefined" && banner.unit)
+      _unit = units.filter((_u) => { return banner.unit.toString() === _u.id.toString() })[0]
+    if(typeof(banner.event) !== "undefined" && banner.event)
+      _event = events.filter((_e) => { return banner.event.toString() === _e.id.toString() })[0]
+    return [_event, _unit]
+  }
   function add_banner_to_table(banner) {
-    if(typeof(banner) === "undefined") return;
-    // window.banner = banner
+    if(typeof(banner) === "undefined") return
     var $cont = $("#banners table tbody")
-    var unit = undefined
-    if(typeof(banner.unit) !== "undefined")
-      unit = units.filter((_u) => { return banner.unit.toString() === _u.id.toString() })[0]
+    _eu = link_event_unit(banner); event = _eu[0], unit = _eu[1]
     $cont.append(`<tr row-id="u${banner.id}" data-id="${banner.id}"></tr>`)
     $cont = $cont.find('tr:last')
     $cont.append("<td rowspan=2>" + to_persian_numeric(banner.id) + "</td>")
     $cont.append("<td title>" + to_persian_numeric(banner.title) + "</td>")
+    $cont.append("<td><span class='badge green new bold' data-badge-caption event>" + (typeof(event) !== "undefined" ? to_persian_numeric(event.title) : "بدون دسته‌بندی" ) + "</span></td>")
     $cont.append("<td unit>" + (typeof(unit) !== "undefined" ? to_persian_numeric(unit.title) : "-" ) + "</td>")
-    $cont.append("<td pass_date>" + (banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : "-") + "</td>")
-    $cont.append("<td return_date>" + (banner.return_date.length ? to_persian_numeric(moment(new Date(banner.return_date)).format('jYYYY/jMM/jDD')) : "-") + "</td>")
+    $cont.append("<td pass_date>" + (banner.pass_date && banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : "-") + "</td>")
+    $cont.append("<td return_date>" + (banner.return_date && banner.return_date.length ? to_persian_numeric(moment(new Date(banner.return_date)).format('jYYYY/jMM/jDD')) : "-") + "</td>")
     $cont.append("<td rowspan=2 class='p-0'><ul class='collection p-0 border-0 left-align'>\
       <li class='collection-item transparent border-0'>\
         <a href='#!edit'>\
@@ -111,6 +156,11 @@
       <li class='collection-item transparent border-0'>\
         <a href='#!return' class='orange-text'>\
           <span class='fa fa-retweet'></span> عودت\
+        </a>\
+      </li>\
+      <li class='collection-item transparent border-0'>\
+        <a class='green-text' href='#!pass'>\
+          <span class='fa fa-reply'></span> تحویل\
         </a>\
       </li>\
       <li class='collection-item transparent border-0'>\
@@ -128,20 +178,17 @@
               </span>`
           : "<span class='orange lighten-3'>[بدون عکس!]</span>") +
         "</center></td>\
-        <td colspan=3>\
+        <td colspan=4>\
           <b>توضیحات:</b> \
             <span desc>" + (banner.desc.length ? to_persian_numeric(banner.desc) : "-" ) + "</span>\
         </td>\
       </tr>")
-    // enable/disable the `return` link
-    if(typeof(banner.pass_date) === "undefined" || !banner.pass_date.length)
-      $cont.find('li > [href="#!return"]').closest('li').addClass('hide')
-    else
-      $cont.find('li > [href="#!return"]').closest('li').removeClass('hide')
+    validate_due_dates($cont, banner)
     $cont.data('rel-obj', banner)
     $cont.find('a[href="#!edit"]').click(() => {
       var modal = modals[0]
-      banner = $cont.data('rel-obj')
+      var banner = $cont.data('rel-obj')
+      for (var key in banner) banner[key] = $(`<div>${banner[key]}</div>`).text()
       var prev_onclose = modal.options.onCloseEnd
       var prev_action = modal.$el.find('form').attr('action')
       var prev_callback = modal.$el.find('form').attr('callback')
@@ -150,9 +197,10 @@
       modal.$el.find('h4.modal-title').addClass('hide')
       modal.$el.find('h4.modal-title.on-edit').removeClass('hide')
       modal.$el.find('[name=title]').val(banner.title)
-      modal.$el.find('[name=pass_date]').val((banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : ""))
-      modal.$el.find('[name=return_date]').val((banner.return_date.length ? to_persian_numeric(moment(new Date(banner.return_date)).format('jYYYY/jMM/jDD')) : ""))
+      modal.$el.find('[name=pass_date]').val((banner.pass_date && banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : ""))
+      modal.$el.find('[name=return_date]').val((banner.return_date && banner.return_date.length ? to_persian_numeric(moment(new Date(banner.return_date)).format('jYYYY/jMM/jDD')) : ""))
       modal.$el.find(`[name=unit] > [value="${banner.unit}"]`).prop("selected", true)
+      modal.$el.find(`[name=event] > [value="${banner.event}"]`).prop("selected", true)
       modal.$el.find('[name=desc]').val(banner.desc)
       modal.$el.find('form').append('<input type=hidden value="' + banner.id + '" name=id />')
       modal.options.onCloseEnd = () => {
@@ -169,34 +217,64 @@
       $(e.target).closest('tr[data-id]').each((_, e) => {
         send_request("/banners/delete", { id: $(e).data('id') }, function(resp) {
           if(validate_response(resp)) {
-            for (var banner of response_data(resp))
+            for (var banner of response_data(resp)) {
+              banners.splice(banners.findIndex(o => { return o.id === banner.id }), 1)
               $(`#banners tr[data-id=${banner.id}]`).fadeOut(300, function() { $(this).remove(); });
+            }
           }
         })
       })
+    })
+    $cont.find('a[href="#!return"]').click((e) => {
+      if(confirm("آیا از عودت این بنر اطمینان دارید؟")) {
+        $(e.target).closest('tr[data-id]').each((_, e) => {
+          send_request("/banners/update", { id: $(e).data('id'), pass_date: null, return_date: null, unit: null }, function(resp) {
+            if(validate_response(resp)) {
+              var banner = response_data(resp)
+              var $el = $(`#banners tr[data-id=${banner.id}]`)
+              $el.find('[return_date]').html('-');
+              $el.find('[pass_date]').html('-');
+              $el.find('[unit]').html('-');
+              validate_due_dates($el, banner)
+              alert(to_persian_numeric(`بنر شماره ${banner.id} با موفقیت عودت داده شد!`))
+            }
+          })
+        })
+      }
+    })
+    $cont.find('a[href="#!pass"]').click((e) => {
+      var modal = modals[1]
+      var banner = $cont.data('rel-obj')
+      var prev_onclose = modal.options.onCloseEnd
+      modal.$el.find('form').append(`<input type=hidden value="${banner.id}" name=id />`)
+      modal.$el.find('[name=pass_date]').val(to_persian_numeric(moment().format('jYYYY/jMM/jDD')))
+      modal.$el.find(`[name=unit] > [value="${banner.unit}"]`).prop("selected", true)
+      modal.options.onCloseEnd = () => {
+        modal.options.onCloseEnd = prev_onclose
+        modal.$el.find('form input[type=hidden][name=id]').remove()
+        modal.$el.find('form')[0].reset()
+      }
+      modal.open()
     })
     return $cont
   }
   function after_edit_banner(resp) {
     if(validate_response(resp)) {
       var banner = response_data(resp)
+      // replace the updated banner with the old one!
+      banners.splice(banners.findIndex(o => { return o.id === banner.id }), 1, clone(banner))
+      // messy assignments
       for (var key in banner)
-        $(`#banners tr[data-id=${banner.id}] [${key}]`).html(to_persian_numeric(banner[key].length ? banner[key] : "-"))
-      var unit = undefined
-      if(typeof(banner.unit) !== "undefined")
-        unit = units.filter((_u) => { return banner.unit.toString() === _u.id.toString() })[0]
-      console.log(banner)
+        $(`#banners tr[data-id=${banner.id}] [${key}]`).html(to_persian_numeric(typeof(banner[key]) !== "undefined" && banner[key] && banner[key].length ? banner[key] : "-"))
+      _eu = link_event_unit(banner); event = _eu[0], unit = _eu[1]
       $(`#banners tr[data-id=${banner.id}] [image]`).html((typeof(banner.image) !== "undefined" && banner.image.length ? `<img src='${banner.image}' class='banner-image-thumb clickable'/><br /><span image_size class="gray-text"></span>` : "<span class='orange lighten-3'>[بدون عکس!]</span>"))
+      $(`#banners tr[data-id=${banner.id}] [event]`).html(typeof(event) !== "undefined" ? to_persian_numeric(event.title) : "-")
       $(`#banners tr[data-id=${banner.id}] [unit]`).html(typeof(unit) !== "undefined" ? to_persian_numeric(unit.title) : "-")
-      $(`#banners tr[data-id=${banner.id}] [pass_date]`).html((banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : "-"))
-      $(`#banners tr[data-id=${banner.id}] [return_date]`).html((banner.return_date.length ? to_persian_numeric(moment(new Date(banner.return_date)).format('jYYYY/jMM/jDD')) : "-"))
+      $(`#banners tr[data-id=${banner.id}] [pass_date]`).html((banner.pass_date && banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : "-"))
+      $(`#banners tr[data-id=${banner.id}] [return_date]`).html((banner.return_date && banner.return_date.length ? to_persian_numeric(moment(new Date(banner.return_date)).format('jYYYY/jMM/jDD')) : "-"))
       $(`#banners tr[data-id=${banner.id}] [image_size]`).html(banner.image_size ? to_persian_numeric(`${banner.image_size.width} <span class="fa fa-times"></span> ${banner.image_size.height}`) : "")
       $(`#banners tr[data-id=${banner.id}]`).addClass('blue lighten-5')
-      // enable/disable the `return` link
-      if(typeof(banner.pass_date) === "undefined" || !banner.pass_date.length)
-        $(`#banners tr[data-id=${banner.id}] li > [href="#!return"]`).closest('li').addClass('hide')
-      else
-        $(`#banners tr[data-id=${banner.id}] li > [href="#!return"]`).closest('li').removeClass('hide')
+      validate_due_dates($(`#banners tr[data-id=${banner.id}]`), banner)
       setTimeout(() => { $(`#banners tr[data-id=${banner.id}]`).removeClass('blue lighten-5') }, 3500)
       close_all_models()
       refresh_events()
@@ -213,6 +291,22 @@
       refresh_events()
     }
   }
+  function render_with_filters(banners) {
+    $("#banners table tbody").html('')
+    var sub_banners = banners
+    // fetch filters
+    var filtered = $('#events [checked]:not(#events-all-btn)').map((_, e) => { return $(e).data('id').toString() }).toArray()
+    // if not all-checked is in effect
+    if(!$("#events-all-btn[checked]").length)
+      sub_banners = banners.filter((_b) => { return filtered.includes((_b.event || "").toString()) })
+    // foreach of sub-banners
+    for (banner of sub_banners)
+      // add the banner
+      add_banner_to_table(banner)
+    // if nothing found!
+    if(!sub_banners.length)
+      $("#banners table tbody").append('<tr><td colspan=7><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
+  }
   $(function() {
     send_request("/units/list", { }, function(resp) {
       window.units_loaded = true
@@ -220,21 +314,15 @@
         units = response_data(resp)
         if(!is_iterable(units)) return;
         for (unit of units)
-          $("#new-banner-modal #units-list").append(`<option value="${unit.id}">${unit.title}</option>`)
+          $("#pass-banner-modal #units-list").append(`<option value="${unit.id}">${unit.title}</option>`)
       }
     }, true);
-    send_request('/banners/list', { }, function(resp) {
-      if(validate_response(resp)) {
-        banners = response_data(resp)
-        if(!is_iterable(units)) return;
-        $("#banners table tbody").html('')
-        for (var banner of banners) { add_banner_to_table(banner) }
-        refresh_events()
-      }
-    })
     send_request("/event/list", { }, function(resp) {
       if(!validate_response(resp)) return
-      data = response_data(resp)
+      var data = undefined
+      events = data = response_data(resp)
+      for (e of events)
+        $("#new-banner-modal #events-list").append(`<option value="${e.id}">${e.title}</option>`)
       $("#events").html('')
       var build_event_button = (title, options = { }) => {
         var out = '<a class="waves-effect waves-light btn ml-10 green lighten-2" data-event '
@@ -265,7 +353,9 @@
         }
         $("#events a.btn[data-event]").click(function() {
           change_check($(this))
-          if($(this).attr('id') !== "events-all-btn")
+          $this = $(this)
+          setTimeout(function() { render_with_filters(banners) }, 500)
+          if($(this).attr('id') !== "events-all-btn") {
             $(this)
               .siblings('#events-all-btn')
                 .removeAttr('checked')
@@ -274,6 +364,10 @@
                 .find('.fa')
                   .removeClass('fa-times fa-check')
                   .addClass('fa-minus')
+            // if all checked? check the all-in btn too!
+            if($('#events [checked]:not(#events-all-btn)').length === $('#events [data-event]:not(#events-all-btn)').length)
+              $("#events #events-all-btn").click()
+          }
         })
         $("#events #events-all-btn").click(function() {
           $(this)
@@ -289,6 +383,52 @@
 
         })
       }, 100)
+    }, true)
+    send_request('/banners/list', { }, function(resp) {
+      if(validate_response(resp)) {
+        banners = response_data(resp)
+        if(!is_iterable(units)) return;
+        $("#banners table tbody").html('')
+        render_with_filters(banners)
+        refresh_events()
+      }
+    }, true)
+    var banners_search_timeout = null
+    $('#banners_search').off('keyup').on('keyup', () => {
+      clearTimeout(banners_search_timeout)
+      if($('#banners_search').val().trim().length === 0) {
+        $("#banners table tbody").html('')
+        render_with_filters(banners)
+        return
+      }
+      banners_search_timeout = setTimeout(() => {
+        var rex = new RegExp("(" + to_persian_numeric($('#banners_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
+        found = banners.filter((e) => {
+          // general search
+          for (var key in e)
+            if(typeof(e[key]) !== "undefined" && e[key] && e[key].toString().match(rex))
+              return true
+          // date search
+          for(var key of ["return_date", "pass_date"])
+            if(typeof(e[key]) !== "undefined" && e[key] && to_persian_numeric(moment(new Date(e[key])).format('jYYYY/jMM/jDD')).match(rex))
+              return true
+          // unit search
+          _eu = link_event_unit(e); unit = _eu[1]
+          if(typeof(unit) !== "undefined" && unit["title"] && unit["title"].match(rex))
+            return true
+          // fail-check
+          return false
+        })
+        found = found.map((e) => {
+          e = clone(e)
+          for (var key in e)
+            if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
+              e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
+          return e
+        })
+        $("#banners table tbody").html('')
+        render_with_filters(found)
+      }, 500);
     })
   })
 </script>

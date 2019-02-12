@@ -97,12 +97,6 @@ window.refresh_events = () => {
         else
           return val.match(/^1(39[7-9]|4(\d{2}))[\/\- ](0[1-9]?|1[0-2])[\/\- ](0[1-9]?|1[0-9]?|2[0-9]?|3[0-1]?)?$/g) !== null
       })
-      .off('keyup').on('keyup', function() {
-        if($(this).val().length)
-          $(this).css('direction', 'ltr')
-        else
-          $(this).css('direction', 'rtl')
-      })
   }, 500)
 }
 

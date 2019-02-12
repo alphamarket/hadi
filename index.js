@@ -112,15 +112,17 @@ app.on('ready', function() {
         // validate the response
         if(typeof(response) === "undefined" || response === null) response = { }
         // create the response
-        var response = JSON.stringify({ req_id: _req_id, response: response })
+        var _response = JSON.stringify({ req_id: _req_id, response: response })
+        // for `development` env.
+        if(process.env.NODE_ENV === "development") { console.log("url-request-reply", response) }
         // if requesting a synced transmission
         if(_is_synced)
           // attach the response
-          event.returnValue = response
+          event.returnValue = _response
         // for un-synced transmission
         else
           // call the action and respond to the submission
-          event.sender.send(`url-request-reply-${_path}-${_req_id}`, response)
+          event.sender.send(`url-request-reply-${_path}-${_req_id}`, _response)
       }
     }
   });

@@ -75,7 +75,8 @@
     $cont.data('rel-obj', unit)
     $cont.find('a[href="#!edit"]').click(() => {
       var modal = modals[0]
-      unit = $cont.data('rel-obj')
+      var unit = $cont.data('rel-obj')
+      for (var key in unit) unit[key] = $(`<div>${unit[key]}</div>`).text()
       var prev_onclose = modal.options.onCloseEnd
       var prev_action = modal.$el.find('form').attr('action')
       var prev_callback = modal.$el.find('form').attr('callback')
@@ -101,8 +102,10 @@
       $(e.target).closest('tr[data-id]').each((_, e) => {
         send_request("/units/delete", { id: $(e).data('id') }, function(resp) {
           if(validate_response(resp)) {
-            for (var unit of response_data(resp))
+            for (var unit of response_data(resp)) {
+              units.splice(units.findIndex(o => { return o.id === unit.id }), 1)
               $(`#units tr[data-id=${unit.id}]`).fadeOut(300, function() { $(this).remove(); });
+            }
           }
         })
       })
@@ -112,6 +115,8 @@
   function after_edit_unit (resp) {
     if(validate_response(resp)) {
       var unit = response_data(resp)
+      // replace the updated banner with the old one!
+      units.splice(units.findIndex(o => { return o.id === unit.id }), 1, clone(unit))
       unit.updated_at = moment(new Date(unit.updated_at)).format('jYYYY/jM/jD ~ HH:mm')
       for (var key in unit)
         $(`#units tr[data-id=${unit.id}] [${key}]`).html(to_persian_numeric(unit[key].length ? unit[key] : "-"))
@@ -149,7 +154,7 @@
         return
       }
       units_search_timeout = setTimeout(() => {
-        var rex = new RegExp("\s?(" + to_persian_numeric($('#units_search').val().trim()).split(' ').join("|") + ")\s?", "gi")
+        var rex = new RegExp("(" + to_persian_numeric($('#units_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
         found = units.filter((e) => {
           for (var key in e) if(e[key].toString().match(rex)) return true
           return false
@@ -157,7 +162,8 @@
         found = found.map((e) => {
           e = clone(e)
           for (var key in e)
-            e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
+            if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
+              e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
           return e
         })
         $("#units table tbody").html('')
