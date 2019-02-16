@@ -1,0 +1,524 @@
+<%- include(app_path + "/views/layouts/header.ejs") %>
+<div class="font-56 purple-text mb-15">
+  <i class="font-56 fa fa-book" xstyle="position: relative; top: 20px;"></i>
+  کتاب‌ها
+  <hr class="purple m-0 height-2" />
+</div>
+<div class="row p-40 center-align" style='padding-top: 10px !important'>
+  <div class="col s12">
+    <div class="row">
+      <div class="input-field col s6 left-align">
+        <a class="waves-effect waves-light btn modal-trigger" href="#new-book-modal" style="position: relative; top: 20px"><span class="fa fa-plus"></span> کتاب‌ جدید</a>
+      </div>
+      <div class="input-field col s6">
+        <i class="material-icons prefix">search</i>
+        <input id="books_search" type="text" class="validate" class="mr-20" placeholder="عبارت مورد نظر خود را جستجو کنید.">
+      </div>
+    </div>
+  </div>
+  <div class="col s12 hide">
+    <div id="events" class="center-align pr-20"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></div>
+  </div>
+  <div class="col s12 mb-20 pb-20 border-bottom right-align">
+    <div class="row">
+      <div class="col s4">
+        <label>
+          <input name="existance" type="radio" data-target=expired />
+          <span>کتاب‌هایی که باید تحویل داده شوند</span>
+        </label>
+      </div>
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" data-target=passed />
+          <span>کتاب‌های تحویل داده شده</span>
+        </label>
+      </div>
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" data-target=not_passed />
+          <span>کتاب‌های موجود</span>
+        </label>
+      </div>
+      <div class="col s2">
+        <label>
+          <input name="existance" type="radio" checked data-target=all />
+          <span>همه موارد</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="col s12 mt-20">
+    <div id="books" class="center-align pr-20">
+      <table class="right-align highlight-bundled">
+        <thead>
+          <tr>
+            <th class="width-60">ردیف</th>
+            <th>عنوان</th>
+            <!-- <th>دسته‌بندی</th> -->
+            <th>یگان تحویل گیرنده</th>
+            <th>تاریخ تحویل</th>
+            <th>تاریخ عودت</th>
+            <th class="width-120">گزینه‌ها</th>
+        </thead>
+        <tbody>
+          <tr><td colspan="6"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="new-book-modal" class="modal">
+    <form action="/books/create" callback=after_create_book>
+      <div class="modal-content right-align">
+        <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><span class="fa fa-plus"></span> کتاب‌ جدید</h4>
+        <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title hide on-edit"><span class="fa fa-edit"></span> ویرایش کتاب‌</h4>
+          <div class="row right-align">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="icon_prefix" type="text" class="validate" placeholder="عنوان" name="title" autofocus required>
+            </div>
+            <!-- <div class="input-field col s12 pr-50">
+              <select id="events-list" class="browser-default border" style="background-color: transparent;" name="event">
+                <option value="" disabled selected>دسته‌بندی کتاب‌ را انتخاب کنید.</option>
+                <option value="">بدون دسته‌بندی!</option>
+              </select>
+            </div> -->
+            <hr class="col s12"/>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">subdirectory_arrow_left</i>
+              <textarea id="icon_prefix" type="text" class="validate" placeholder="توضیحات خود را در مورد کتاب‌ در اینجا بنویسید. [اختیاری]" name="desc" style="min-height: 100px !important"></textarea>
+            </div>
+            <hr class="col s12"/>
+            <div class="col s12">
+              <b><span class="material-icons ml-20" style="position: relative; top: 7px">cloud_upload</span> فایل عکس کتاب‌ را بارگذاری کنید.</b>
+              <input type="file" accept="image/x-png, image/jpeg" class="left" name="image" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #e7e7e7">
+          <button type=submit class="waves-effect waves-green btn-flat green-text"><span class="fa fa-check"></span> ثبت اطلاعات</button>
+          <button type=reset class="modal-close waves-effect waves-red btn-flat red-text left"><span class="fa fa-times"></span> انصراف</button>
+        </div>
+    </form>
+  </div>
+  <div id="pass-book-modal" class="modal">
+    <form action="/books/update" callback=after_edit_book>
+      <div class="modal-content right-align">
+        <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><span class="fa fa-reply"></span> تحویل کتاب‌</h4>
+          <div class="row right-align">
+            <div class="input-field col s12">
+              <select id="units-list" class="browser-default" style="background-color: transparent;" name="unit" autofocus>
+                <option value="" disabled selected>یگان تحویل گیرنده را انتخاب کنید.</option>
+              </select>
+            </div>
+            <div class="input-field col s6">
+              <label title></label>
+            </div>
+            <hr class="col s12"/>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">timer_off</i>
+              <input id="icon_prefix" type="text" class="date" placeholder="تاریخ عودت (مثال: ۱۳۹۸/۰۷/۱۳) [اختیاری]" name="return_date">
+            </div>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">timer</i>
+              <input id="icon_prefix" type="text" class="date" placeholder="تاریخ تحویل (مثال: ۱۳۹۸/۰۲/۲۰) [اختیاری]" name="pass_date">
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">person_pin</i>
+              <input id="icon_prefix" type="text" class="validate" placeholder="شخص تحویل گیرنده" name="passed_to" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #e7e7e7">
+          <button type=submit class="waves-effect waves-green btn-flat green-text"><span class="fa fa-check"></span> ثبت اطلاعات</button>
+          <button type=reset class="modal-close waves-effect waves-red btn-flat red-text left"><span class="fa fa-times"></span> انصراف</button>
+        </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript">
+  var units = []
+  // var events = []
+  var books = []
+  var current_page = 1
+  function validate_due_dates($cont, book) {
+    // enable/disable the `return/pass` link
+    if(typeof(book.pass_date) === "undefined" || !book.pass_date || !book.pass_date.length) {
+      $cont.find('li > [href="#!return"]').closest('li').addClass('hide')
+      $cont.find('li > [href="#!pass"]').closest('li').removeClass('hide')
+    } else {
+      $cont.find('li > [href="#!return"]').closest('li').removeClass('hide')
+      $cont.find('li > [href="#!pass"]').closest('li').addClass('hide')
+    }
+  }
+  function link_unit(book) {
+    var _unit = undefined
+    // var _event = undefined
+    if(typeof(book.unit) !== "undefined" && book.unit)
+      _unit = units.filter((_u) => { return book.unit.toString() === _u.id.toString() })[0]
+    // if(typeof(book.event) !== "undefined" && book.event)
+      // _event = events.filter((_e) => { return book.event.toString() === _e.id.toString() })[0]
+    return _unit //[_event, _unit]
+  }
+  function add_book_to_table(book) {
+    if(typeof(book) === "undefined") return
+    var $cont = $("#books table tbody")
+    unit = link_unit(book);
+    $cont.append(`<tr row-id="u${book.id}" data-id="${book.id}"></tr>`)
+    $cont = $cont.find('tr:last')
+    $cont.append("<td rowspan=2>" + to_persian_numeric(book.id) + "</td>")
+    $cont.append("<td title>" + to_persian_numeric(book.title) + "</td>")
+    // $cont.append("<td><span class='badge green new bold' data-badge-caption event>" + (typeof(event) !== "undefined" ? to_persian_numeric(event.title) : "بدون دسته‌بندی" ) + "</span></td>")
+    $cont.append("<td unit>" + (typeof(unit) !== "undefined" ? to_persian_numeric(unit.title) : "-" ) + "</td>")
+    $cont.append("<td pass_date>" + (book.pass_date && book.pass_date.length ? to_persian_numeric(moment(new Date(book.pass_date)).format('jYYYY/jMM/jDD')) : "-") + "</td>")
+    $cont.append("<td return_date>" + (book.return_date && book.return_date.length ? to_persian_numeric(moment(new Date(book.return_date)).format('jYYYY/jMM/jDD')) : "-") + "</td>")
+    $cont.append("<td rowspan=2 class='p-0'><ul class='collection p-0 border-0 left-align'>\
+      <li class='collection-item transparent border-0'>\
+        <a href='#!edit'>\
+          <span class='fa fa-edit'></span> ویرایش\
+        </a>\
+      </li>\
+      <li class='collection-item transparent border-0'>\
+        <a href='#!return' class='orange-text'>\
+          <span class='fa fa-retweet'></span> عودت\
+        </a>\
+      </li>\
+      <li class='collection-item transparent border-0'>\
+        <a class='green-text' href='#!pass'>\
+          <span class='fa fa-reply'></span> تحویل\
+        </a>\
+      </li>\
+      <li class='collection-item transparent border-0'>\
+        <a href='#!delete' class='red-text'>\
+          <span class='fa fa-trash'></span> حذف\
+        </a>\
+      </li>\
+    </td>")
+    $cont.closest('tbody').append("<tr row-id='u" + book.id + "' data-id='" + book.id + "'>\
+        <td><center image>" +
+          (typeof(book.image) !== "undefined" && book.image.length ?
+            `<img src='${book.image}' class='image-thumb clickable'/><br />\
+              <span image_size class="gray-text">\
+                ${book.image_size ? to_persian_numeric(`${book.image_size.width} <span class="fa fa-times"></span> ${book.image_size.height}`) : ""}\
+              </span>`
+          : "<span class='orange lighten-3'>[بدون عکس!]</span>") +
+        "</center></td>\
+        <td colspan=3>\
+          <p desc><b>توضیحات:</b> " + (book.desc.length ? to_persian_numeric(book.desc) : "-" ) + "</p>\
+            " + (book.passed_to ? `<p><b>تحویل گیرنده: </b> <span passed_to>${to_persian_numeric(book.passed_to)}</span></p>` : "") + "\
+        </td>\
+      </tr>")
+    validate_due_dates($cont, book)
+    $cont.data('rel-obj', book)
+    $cont.find('a[href="#!edit"]').click(() => {
+      var modal = modals[0]
+      var book = $cont.data('rel-obj')
+      for (var key in book) book[key] = $(`<div>${book[key]}</div>`).text()
+      var prev_onclose = modal.options.onCloseEnd
+      var prev_action = modal.$el.find('form').attr('action')
+      var prev_callback = modal.$el.find('form').attr('callback')
+      modal.$el.find('form').attr('action', '/books/update')
+      modal.$el.find('form').attr('callback', 'after_edit_book')
+      modal.$el.find('h4.modal-title').addClass('hide')
+      modal.$el.find('h4.modal-title.on-edit').removeClass('hide')
+      modal.$el.find('[name=title]').val(book.title)
+      modal.$el.find('[name=pass_date]').val((book.pass_date && book.pass_date.length ? to_persian_numeric(moment(new Date(book.pass_date)).format('jYYYY/jMM/jDD')) : ""))
+      modal.$el.find('[name=return_date]').val((book.return_date && book.return_date.length ? to_persian_numeric(moment(new Date(book.return_date)).format('jYYYY/jMM/jDD')) : ""))
+      modal.$el.find(`[name=unit] > [value="${book.unit}"]`).prop("selected", true)
+      // modal.$el.find(`[name=event] > [value="${book.event}"]`).prop("selected", true)
+      modal.$el.find('[name=desc]').val(book.desc)
+      modal.$el.find('form').append('<input type=hidden value="' + book.id + '" name=id />')
+      modal.options.onCloseEnd = () => {
+        modal.options.onCloseEnd = prev_onclose
+        modal.$el.find('form').attr('action', prev_action)
+        modal.$el.find('form input[type=hidden][name=id]').remove()
+        modal.$el.find('h4.modal-title').removeClass('hide')
+        modal.$el.find('h4.modal-title.on-edit').addClass('hide')
+        modal.$el.find('form')[0].reset()
+      }
+      modal.open()
+    })
+    $cont.find('a[href="#!delete"]').click((e) => {
+      $(e.target).closest('tr[data-id]').each((_, e) => {
+        send_request("/books/delete", { id: $(e).data('id') }, function(resp) {
+          if(validate_response(resp)) {
+            for (var book of response_data(resp)) {
+              books.splice(books.findIndex(o => { return o.id === book.id }), 1)
+              $(`#books tr[data-id=${book.id}]`).fadeOut(300, function() { $(this).remove(); });
+            }
+          }
+        })
+      })
+    })
+    $cont.find('a[href="#!return"]').click((e) => {
+      if(confirm("آیا از عودت این کتاب‌ اطمینان دارید؟")) {
+        $(e.target).closest('tr[data-id]').each((_, e) => {
+          send_request("/books/update", { id: $(e).data('id'), pass_date: null, return_date: null, unit: null, passed_to: null }, function(resp) {
+            if(validate_response(resp)) {
+              var book = response_data(resp)
+              // replace the old one with new one!
+              books.splice(books.findIndex(o => { return o.id === book.id }), 1, clone(book))
+              var $el = $(`#books tr[data-id=${book.id}]`)
+              $el.find('[return_date]').html('-');
+              $el.find('[pass_date]').html('-');
+              $el.find('[passed_to]').html('-');
+              $el.find('[unit]').html('-');
+              validate_due_dates($el, book)
+              update_rows()
+              alert(to_persian_numeric(`کتاب‌ شماره ${book.id} با موفقیت عودت داده شد!`))
+            }
+          })
+        })
+      }
+    })
+    $cont.find('a[href="#!pass"]').click((e) => {
+      var modal = modals[1]
+      var book = $cont.data('rel-obj')
+      var prev_onclose = modal.options.onCloseEnd
+      modal.$el.find('form').append(`<input type=hidden value="${book.id}" name=id />`)
+      modal.$el.find('[name=pass_date]').val(to_persian_numeric(moment().format('jYYYY/jMM/jDD')))
+      modal.$el.find(`[name=unit] > [value="${book.unit}"]`).prop("selected", true)
+      modal.options.onCloseEnd = () => {
+        modal.options.onCloseEnd = prev_onclose
+        modal.$el.find('form input[type=hidden][name=id]').remove()
+        modal.$el.find('form')[0].reset()
+        update_rows()
+      }
+      modal.open()
+    })
+    return $cont
+  }
+  function after_edit_book(resp) {
+    if(validate_response(resp)) {
+      var book = response_data(resp)
+      // replace the updated book with the old one!
+      books.splice(books.findIndex(o => { return o.id === book.id }), 1, clone(book))
+      // messy assignments
+      for (var key in book)
+        $(`#books tr[data-id=${book.id}] [${key}]`).html(to_persian_numeric(typeof(book[key]) !== "undefined" && book[key] && book[key].length ? book[key] : "-"))
+      unit = link_unit(book);
+      $(`#books tr[data-id=${book.id}] [image]`).html((typeof(book.image) !== "undefined" && book.image.length ? `<img src='${book.image}' class='image-thumb clickable'/><br /><span image_size class="gray-text"></span>` : "<span class='orange lighten-3'>[بدون عکس!]</span>"))
+      // $(`#books tr[data-id=${book.id}] [event]`).html(typeof(event) !== "undefined" ? to_persian_numeric(event.title) : "-")
+      $(`#books tr[data-id=${book.id}] [unit]`).html(typeof(unit) !== "undefined" ? to_persian_numeric(unit.title) : "-")
+      $(`#books tr[data-id=${book.id}] [pass_date]`).html((book.pass_date && book.pass_date.length ? to_persian_numeric(moment(new Date(book.pass_date)).format('jYYYY/jMM/jDD')) : "-"))
+      $(`#books tr[data-id=${book.id}] [return_date]`).html((book.return_date && book.return_date.length ? to_persian_numeric(moment(new Date(book.return_date)).format('jYYYY/jMM/jDD')) : "-"))
+      $(`#books tr[data-id=${book.id}] [image_size]`).html(book.image_size ? to_persian_numeric(`${book.image_size.width} <span class="fa fa-times"></span> ${book.image_size.height}`) : "")
+      $(`#books tr[data-id=${book.id}]`).addClass('blue lighten-5')
+      validate_due_dates($(`#books tr[data-id=${book.id}]`), book)
+      setTimeout(() => { $(`#books tr[data-id=${book.id}]`).removeClass('blue lighten-5') }, 3500)
+      close_all_models()
+      refresh_events()
+    }
+  }
+  function after_create_book(data) {
+    if(validate_response(data)) {
+      book = response_data(data)
+      books.push(book)
+      $row = add_book_to_table(book)
+      $row.addClass('blue lighten-5').next('tr').addClass('blue lighten-5')
+      setTimeout(() => { $row.removeClass('blue lighten-5').next('tr').removeClass('blue lighten-5') }, 3500)
+      close_all_models()
+      refresh_events()
+    }
+  }
+  function render_with_filters(books) {
+    // remove any pagination form
+    $("#books").find('.pagination').remove()
+    // wait for loading message
+    $("#books table tbody").html('<tr><td colspan="6"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></td></tr>')
+    // make a thread
+    setTimeout(function() {
+      var sub_books = books
+      // fetch filters
+      // var filtered = $('#events [checked]:not(#events-all-btn)').map((_, e) => { return $(e).data('id').toString() }).toArray()
+      // if not all-checked is in effect
+      // if(!$("#events-all-btn[checked]").length)
+        // sub_books = books.filter((_b) => { return filtered.includes((_b.event || "").toString()) })
+      // consider the existance filter
+      switch($('[name=existance]:checked').data('target')) {
+        case 'all':
+          break;
+        case 'passed':
+          sub_books = sub_books.filter((_b) => { return typeof(_b.pass_date) === "string" && _b.pass_date.length })
+          break;
+        case 'not_passed':
+          sub_books = sub_books.filter((_b) => { return typeof(_b.pass_date) === "undefined" || !_b.pass_date || !_b.pass_date.length })
+          break;
+        case 'expired':
+          sub_books = sub_books.filter((_b) => {
+            var ret_date = moment(new Date(_b.return_date))
+            return _b.return_date && ret_date.toString().toLowerCase() !== "invalid date" && ret_date < moment()
+          })
+          break;
+      }
+      $("#books table tbody").html('')
+      // paginate the sub-books
+      sub_books = paginate(sub_books, current_page, per_page)
+      // foreach of sub-books
+      for (book of sub_books.data)
+        // add the book
+        add_book_to_table(book)
+      // if nothing found!
+      if(!sub_books.data.length)
+        $("#books table tbody").append('<tr><td colspan=6><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
+      else if(sub_books.totalPages > 1) {
+        $('#books table').after(`<ul class="pagination">
+            <li class="waves-effect"><a href="#!" onclick="current_page = 1; update_rows()"><span class="fa fa-angle-double-right" style="position: relative; top: 3px"></span></a></li>
+            <li class="waves-effect"><a href="#!" onclick="current_page--; update_rows()"><i class="material-icons">chevron_right</i></a></li>
+          </ul>`)
+        for(var iter = Math.max(1, current_page - 5); iter <= Math.min(current_page + 5, sub_books.totalPages); iter++) {
+          $('#books .pagination').append(`<li class="waves-effect" data-id=${iter}><a href="#!" onclick="current_page = ${iter}; update_rows()">${to_persian_numeric(iter)}</a></li>`)
+        }
+        $('#books .pagination').append(`<li class="waves-effect"><a href="#!" onclick="current_page++; update_rows()"><i class="material-icons">chevron_left</i></a></li>
+          <li class="waves-effect"><a href="#!" onclick="current_page = ${sub_books.totalPages}; update_rows()"><span class="fa fa-angle-double-left" style="position: relative; top: 3px"></span></a></li>`)
+        // activate the current page
+        $(`#books .pagination [data-id=${current_page}]`).addClass('active').siblings('li').removeClass('active')
+      }
+      // referesh all events on the page
+      refresh_events()
+    }, 400) // setTimeout
+  }
+  // update rows of table
+  function update_rows(reset_current_page) {
+    if(typeof(reset_current_page) === "undefined")
+      reset_current_page = false
+    $('#books_search').trigger('keyup', !reset_current_page)
+  }
+  // when doc is ready
+  $(function() {
+    setTimeout(function() {
+      send_request("/units/list", { }, function(resp) {
+        window.units_loaded = true
+        if(validate_response(resp)) {
+          units = response_data(resp)
+          if(!is_iterable(units)) return;
+          for (unit of units)
+            $("#pass-book-modal #units-list").append(`<option value="${unit.id}">${unit.title}</option>`)
+        }
+      }, true);
+      // send_request("/event/list", { }, function(resp) {
+      //   if(!validate_response(resp)) return
+      //   var data = undefined
+      //   events = data = response_data(resp)
+      //   for (e of events)
+      //     $("#new-book-modal #events-list").append(`<option value="${e.id}">${e.title}</option>`)
+      //   $("#events").html('')
+      //   var build_event_button = (title, options = { }) => {
+      //     var out = '<a class="waves-effect waves-light btn ml-10 green lighten-2" data-event '
+      //     for (key in options) out += key + "='" + options[key] + "' "
+      //     out += "><span class='fa fa-check'></span> " + title + "</a>";
+      //     return out
+      //   }
+      //   $("#events").append(
+      //     build_event_button(
+      //       "همه موارد", {
+      //         checked: "true",
+      //         id: "events-all-btn",
+      //       }
+      //     )
+      //   )
+      //   $.each(data, (_, item) => { $("#events").append(build_event_button(item.title, { "data-id": item.id, checked: "true" })) })
+      //   setTimeout(function() {
+      //     change_check = ($this) => {
+      //       if(!$this.attr('checked')) {
+      //         $this.removeClass('red').addClass('green');
+      //         $this.find('.fa').removeClass('fa-times fa-minus').addClass('fa-check');
+      //         $this.attr('checked', true)
+      //       } else {
+      //         $this.removeClass('green').addClass('red');
+      //         $this.find('.fa').removeClass('fa-check fa-minus').addClass('fa-times');
+      //         $this.removeAttr('checked')
+      //       }
+      //     }
+      //     $("#events a.btn[data-event]").click(function() {
+      //       change_check($(this))
+      //       $this = $(this)
+      //       setTimeout(function() { update_rows(true) }, 200)
+      //       if($(this).attr('id') !== "events-all-btn") {
+      //         $(this)
+      //           .siblings('#events-all-btn')
+      //             .removeAttr('checked')
+      //             .removeClass('red green')
+      //             .addClass('orange')
+      //             .find('.fa')
+      //               .removeClass('fa-times fa-check')
+      //               .addClass('fa-minus')
+      //         // if all checked? check the all-in btn too!
+      //         if($('#events [checked]:not(#events-all-btn)').length === $('#events [data-event]:not(#events-all-btn)').length)
+      //           $("#events #events-all-btn").click()
+      //       }
+      //     })
+      //     $("#events #events-all-btn").click(function() {
+      //       $(this)
+      //         .removeClass('orange')
+      //         .find('.fa')
+      //         .removeClass('fa-minus')
+      //       $(this)
+      //         .siblings('[data-event]')
+      //         .each(function() {
+      //           $(this).attr('checked', (_, attr) => { return !$('#events-all-btn').attr('checked') });
+      //           change_check($(this))
+      //         })
+      //
+      //     })
+      //   }, 100)
+      // }, true)
+      send_request('/books/list', { }, function(resp) {
+        if(validate_response(resp)) {
+          books = response_data(resp)
+          if(!is_iterable(units)) return;
+          $("#books table tbody").html('')
+          render_with_filters(books)
+          refresh_events()
+        }
+      }, true)
+      // on radio-btn click
+      $("[name=existance]").change(function() {
+        update_rows(true)
+      })
+      // on search box key press
+      var books_search_timeout = null
+      $('#books_search').off('keyup').on('keyup', (e, dont_reset_current_page) => {
+        // check if reseting current page is required?
+        if(!dont_reset_current_page) { current_page = 1 }
+        // clear previous search timeout
+        clearTimeout(books_search_timeout)
+        // if no text entered?
+        if($('#books_search').val().trim().length === 0) {
+          // render all books
+          render_with_filters(books)
+          return
+        }
+        // the main search procedure
+        books_search_timeout = setTimeout(() => {
+          var rex = new RegExp("(" + to_persian_numeric($('#books_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
+          found = books.filter((e) => {
+            // general search
+            for (var key in e)
+              if(typeof(e[key]) !== "undefined" && e[key] && to_persian_numeric(e[key]).toString().match(rex))
+                return true
+            // date search
+            for(var key of ["return_date", "pass_date"])
+              if(typeof(e[key]) !== "undefined" && e[key] && to_persian_numeric(moment(new Date(e[key])).format('jYYYY/jMM/jDD')).match(rex))
+                return true
+            // unit search
+            unit = link_unit(e);
+            if(typeof(unit) !== "undefined" && unit["title"] && unit["title"].match(rex))
+              return true
+            // fail-check
+            return false
+          })
+          found = found.map((e) => {
+            e = clone(e)
+            for (var key in e)
+              if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
+                e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
+            return e
+          })
+          $("#books table tbody").html('')
+          render_with_filters(found)
+        }, 500);
+      })
+    }, 50) // setTimeout
+  })
+</script>
+<%- include(app_path + "/views/layouts/footer.ejs") %>

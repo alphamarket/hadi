@@ -25,11 +25,13 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#239f40', endColorstr='#e73827', GradientType=0 );
   }
 
-  .banner-image-thumb {
+  .image-thumb {
     max-width: 200px;
     max-height: 200px;
     box-shadow: 0 0 20px 0 #007bffa3;
   }
+
+  
 
   .bold { font-weight: bold !important }
 

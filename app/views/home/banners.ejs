@@ -1,6 +1,6 @@
 <%- include(app_path + "/views/layouts/header.ejs") %>
 <div class="font-56 purple-text mb-15">
-  <i class="font-56 material-icons" style="position: relative; top: 20px;">blur_on</i>
+  <i class="font-56 material-icons" style="position: relative; top: 20px;">photo_camera</i>
   بنرها
   <hr class="purple m-0 height-2" />
 </div>
@@ -196,7 +196,7 @@
     $cont.closest('tbody').append("<tr row-id='u" + banner.id + "' data-id='" + banner.id + "'>\
         <td><center image>" +
           (typeof(banner.image) !== "undefined" && banner.image.length ?
-            `<img src='${banner.image}' class='banner-image-thumb clickable'/><br />\
+            `<img src='${banner.image}' class='image-thumb clickable'/><br />\
               <span image_size class="gray-text">\
                 ${banner.image_size ? to_persian_numeric(`${banner.image_size.width} <span class="fa fa-times"></span> ${banner.image_size.height}`) : ""}\
               </span>`
@@ -296,7 +296,7 @@
       for (var key in banner)
         $(`#banners tr[data-id=${banner.id}] [${key}]`).html(to_persian_numeric(typeof(banner[key]) !== "undefined" && banner[key] && banner[key].length ? banner[key] : "-"))
       _eu = link_event_unit(banner); event = _eu[0], unit = _eu[1]
-      $(`#banners tr[data-id=${banner.id}] [image]`).html((typeof(banner.image) !== "undefined" && banner.image.length ? `<img src='${banner.image}' class='banner-image-thumb clickable'/><br /><span image_size class="gray-text"></span>` : "<span class='orange lighten-3'>[بدون عکس!]</span>"))
+      $(`#banners tr[data-id=${banner.id}] [image]`).html((typeof(banner.image) !== "undefined" && banner.image.length ? `<img src='${banner.image}' class='image-thumb clickable'/><br /><span image_size class="gray-text"></span>` : "<span class='orange lighten-3'>[بدون عکس!]</span>"))
       $(`#banners tr[data-id=${banner.id}] [event]`).html(typeof(event) !== "undefined" ? to_persian_numeric(event.title) : "-")
       $(`#banners tr[data-id=${banner.id}] [unit]`).html(typeof(unit) !== "undefined" ? to_persian_numeric(unit.title) : "-")
       $(`#banners tr[data-id=${banner.id}] [pass_date]`).html((banner.pass_date && banner.pass_date.length ? to_persian_numeric(moment(new Date(banner.pass_date)).format('jYYYY/jMM/jDD')) : "-"))
