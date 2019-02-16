@@ -139,6 +139,7 @@
   var units = []
   var events = []
   var banners = []
+  var current_page = 1
   function validate_due_dates($cont, banner) {
     // enable/disable the `return/pass` link
     if(typeof(banner.pass_date) === "undefined" || !banner.pass_date || !banner.pass_date.length) {
@@ -262,7 +263,7 @@
               $el.find('[passed_to]').html('-');
               $el.find('[unit]').html('-');
               validate_due_dates($el, banner)
-              $('#banners_search').trigger('keyup')
+              update_rows()
               alert(to_persian_numeric(`بنر شماره ${banner.id} با موفقیت عودت داده شد!`))
             }
           })
@@ -280,7 +281,7 @@
         modal.options.onCloseEnd = prev_onclose
         modal.$el.find('form input[type=hidden][name=id]').remove()
         modal.$el.find('form')[0].reset()
-        $('#banners_search').trigger('keyup')
+        update_rows()
       }
       modal.open()
     })
@@ -320,7 +321,11 @@
     }
   }
   function render_with_filters(banners) {
+    // remove any pagination form
+    $("#banners").find('.pagination').remove()
+    // wait for loading message
     $("#banners table tbody").html('<tr><td colspan="7"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></td></tr>')
+    // make a thread
     setTimeout(function() {
       var sub_banners = banners
       // fetch filters
@@ -346,17 +351,39 @@
           break;
       }
       $("#banners table tbody").html('')
+      // paginate the sub-banners
+      sub_banners = paginate(sub_banners, current_page, per_page)
       // foreach of sub-banners
-      for (banner of sub_banners)
+      for (banner of sub_banners.data)
         // add the banner
         add_banner_to_table(banner)
+      // if nothing found!
+      if(!sub_banners.data.length)
+        $("#banners table tbody").append('<tr><td colspan=7><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
+      else if(sub_banners.totalPages > 1) {
+        $('#banners table').after(`<ul class="pagination">
+            <li class="waves-effect"><a href="#!" onclick="current_page = 1; update_rows()"><span class="fa fa-angle-double-right" style="position: relative; top: 3px"></span></a></li>
+            <li class="waves-effect"><a href="#!" onclick="current_page--; update_rows()"><i class="material-icons">chevron_right</i></a></li>
+          </ul>`)
+        for(var iter = Math.max(1, current_page - 5); iter <= Math.min(current_page + 5, sub_banners.totalPages); iter++) {
+          $('#banners .pagination').append(`<li class="waves-effect" data-id=${iter}><a href="#!" onclick="current_page = ${iter}; update_rows()">${to_persian_numeric(iter)}</a></li>`)
+        }
+        $('#banners .pagination').append(`<li class="waves-effect"><a href="#!" onclick="current_page++; update_rows()"><i class="material-icons">chevron_left</i></a></li>
+          <li class="waves-effect"><a href="#!" onclick="current_page = ${sub_banners.totalPages}; update_rows()"><span class="fa fa-angle-double-left" style="position: relative; top: 3px"></span></a></li>`)
+        // activate the current page
+        $(`#banners .pagination [data-id=${current_page}]`).addClass('active').siblings('li').removeClass('active')
+      }
       // referesh all events on the page
       refresh_events()
-      // if nothing found!
-      if(!sub_banners.length)
-        $("#banners table tbody").append('<tr><td colspan=7><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
     }, 400) // setTimeout
   }
+  // update rows of table
+  function update_rows(reset_current_page) {
+    if(typeof(reset_current_page) === "undefined")
+      reset_current_page = false
+    $('#banners_search').trigger('keyup', !reset_current_page)
+  }
+  // when doc is ready
   $(function() {
     setTimeout(function() {
       send_request("/units/list", { }, function(resp) {
@@ -405,7 +432,7 @@
           $("#events a.btn[data-event]").click(function() {
             change_check($(this))
             $this = $(this)
-            setTimeout(function() { $('#banners_search').trigger('keyup') }, 200)
+            setTimeout(function() { update_rows(true) }, 200)
             if($(this).attr('id') !== "events-all-btn") {
               $(this)
                 .siblings('#events-all-btn')
@@ -446,16 +473,22 @@
       }, true)
       // on radio-btn click
       $("[name=existance]").change(function() {
-        $('#banners_search').trigger('keyup')
+        update_rows(true)
       })
       // on search box key press
       var banners_search_timeout = null
-      $('#banners_search').off('keyup').on('keyup', () => {
+      $('#banners_search').off('keyup').on('keyup', (e, dont_reset_current_page) => {
+        // check if reseting current page is required?
+        if(!dont_reset_current_page) { current_page = 1 }
+        // clear previous search timeout
         clearTimeout(banners_search_timeout)
+        // if no text entered?
         if($('#banners_search').val().trim().length === 0) {
+          // render all banners
           render_with_filters(banners)
           return
         }
+        // the main search procedure
         banners_search_timeout = setTimeout(() => {
           var rex = new RegExp("(" + to_persian_numeric($('#banners_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
           found = banners.filter((e) => {

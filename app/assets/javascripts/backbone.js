@@ -8,6 +8,8 @@ const fs       = require('fs')
 const remote = electron.remote
 // fetch the IPC renderer
 const { ipcRenderer } = require('electron')
+// [pagination] the per-page const
+const per_page = 30
 
 // gets global variables
 window._g = (val) => { return remote.getGlobal(val) }
@@ -117,6 +119,24 @@ window.is_iterable = function(obj) {
   // checks for null and undefined
   if (obj == null) { return false; }
   return typeof obj[Symbol.iterator] === 'function';
+}
+
+window.paginate = function(collection, page = 1, numItems = 10) {
+  if( !Array.isArray(collection) ) {
+    throw `Expect array and got ${typeof collection}`;
+  }
+  const currentPage = parseInt(page);
+  const perPage = parseInt(numItems);
+  const offset = (page - 1) * perPage;
+  const paginatedItems = collection.slice(offset, offset + perPage);
+
+  return {
+    currentPage,
+    perPage,
+    total: collection.length,
+    totalPages: Math.ceil(collection.length / perPage),
+    data: paginatedItems
+  };
 }
 
 window.clone = function(obj) {
