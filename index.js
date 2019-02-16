@@ -48,25 +48,42 @@ addWindow = void 0;
 
 // Listen for app to be ready
 app.on('ready', function() {
+  // get window width/height
+  const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize
   // Create new window
   mainWindow = new BrowserWindow({
     frame: false,
+    show: false,
+    width: width,
+    height: height,
     webPreferences: {
       nodeIntegration: true
     }
   });
-  // maximize the window
-  mainWindow.maximize();
   // for `development` env.
   if(process.env.NODE_ENV === "development") {
     mainWindow.toggleDevTools();
   }
+  // create a new `splash`-Window
+  splash = new BrowserWindow({ width: 810, height: 610, frame: false, alwaysOnTop: true, webPreferences: { nodeIntegration: true } });
+  // load the splash screen
+  splash.loadURL(url.format({
+    pathname: path.join(app_path, 'views/helpers/splash.ejs'),
+    protocol: 'file:'
+  }));
   // Load html in window
   mainWindow.loadURL(url.format({
     pathname: path.join(app_path, 'views/home/main.ejs'),
-    protocol: 'file:',
-    slashes: true
+    protocol: 'file:'
   }));
+  mainWindow.webContents.once('dom-ready', () => {
+    setTimeout(() => {
+      // close the splash
+      splash.destroy();
+      // maximize the window
+      mainWindow.show();
+    }, 5000)
+  });
   // Quit app when closed
   mainWindow.on('closed', function() {
     if (process.platform !== 'darwin') {
