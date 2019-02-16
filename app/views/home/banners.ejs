@@ -1,6 +1,6 @@
 <%- include(app_path + "/views/layouts/header.ejs") %>
 <div class="font-56 purple-text mb-15">
-  <i class="font-56 material-icons" style="position: relative; top: 20px;">photo_camera</i>
+  <i class="font-56 material-icons" style="position: relative; top: 20px;">blur_on</i>
   بنرها
   <hr class="purple m-0 height-2" />
 </div>
@@ -106,7 +106,7 @@
         <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><span class="fa fa-reply"></span> تحویل بنر</h4>
           <div class="row right-align">
             <div class="input-field col s12">
-              <select id="units-list" class="browser-default" style="background-color: transparent;" name="unit">
+              <select id="units-list" class="browser-default" style="background-color: transparent;" name="unit" autofocus>
                 <option value="" disabled selected>یگان تحویل گیرنده را انتخاب کنید.</option>
               </select>
             </div>
@@ -121,6 +121,10 @@
             <div class="input-field col s6">
               <i class="material-icons prefix">timer</i>
               <input id="icon_prefix" type="text" class="date" placeholder="تاریخ تحویل (مثال: ۱۳۹۸/۰۲/۲۰) [اختیاری]" name="pass_date">
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">person_pin</i>
+              <input id="icon_prefix" type="text" class="validate" placeholder="شخص تحویل گیرنده" name="passed_to" required>
             </div>
           </div>
         </div>
@@ -198,8 +202,8 @@
           : "<span class='orange lighten-3'>[بدون عکس!]</span>") +
         "</center></td>\
         <td colspan=4>\
-          <b>توضیحات:</b> \
-            <span desc>" + (banner.desc.length ? to_persian_numeric(banner.desc) : "-" ) + "</span>\
+          <p desc><b>توضیحات:</b> " + (banner.desc.length ? to_persian_numeric(banner.desc) : "-" ) + "</p>\
+            " + (banner.passed_to ? `<p><b>تحویل گیرنده: </b> <span passed_to>${to_persian_numeric(banner.passed_to)}</span></p>` : "") + "\
         </td>\
       </tr>")
     validate_due_dates($cont, banner)
@@ -247,12 +251,15 @@
     $cont.find('a[href="#!return"]').click((e) => {
       if(confirm("آیا از عودت این بنر اطمینان دارید؟")) {
         $(e.target).closest('tr[data-id]').each((_, e) => {
-          send_request("/banners/update", { id: $(e).data('id'), pass_date: null, return_date: null, unit: null }, function(resp) {
+          send_request("/banners/update", { id: $(e).data('id'), pass_date: null, return_date: null, unit: null, passed_to: null }, function(resp) {
             if(validate_response(resp)) {
               var banner = response_data(resp)
+              // replace the old one with new one!
+              banners.splice(banners.findIndex(o => { return o.id === banner.id }), 1, clone(banner))
               var $el = $(`#banners tr[data-id=${banner.id}]`)
               $el.find('[return_date]').html('-');
               $el.find('[pass_date]').html('-');
+              $el.find('[passed_to]').html('-');
               $el.find('[unit]').html('-');
               validate_due_dates($el, banner)
               $('#banners_search').trigger('keyup')
@@ -454,7 +461,7 @@
           found = banners.filter((e) => {
             // general search
             for (var key in e)
-              if(typeof(e[key]) !== "undefined" && e[key] && e[key].toString().match(rex))
+              if(typeof(e[key]) !== "undefined" && e[key] && to_persian_numeric(e[key]).toString().match(rex))
                 return true
             // date search
             for(var key of ["return_date", "pass_date"])
