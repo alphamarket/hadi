@@ -140,14 +140,17 @@
   var events = []
   var banners = []
   var current_page = 1
-  function validate_due_dates($cont, banner) {
+  function validate_due_dates($cont, sundry) {
     // enable/disable the `return/pass` link
-    if(typeof(banner.pass_date) === "undefined" || !banner.pass_date || !banner.pass_date.length) {
+    if(typeof(sundry.pass_date) === "undefined" || !sundry.pass_date || !sundry.pass_date.length) {
       $cont.find('li > [href="#!return"]').closest('li').addClass('hide')
       $cont.find('li > [href="#!pass"]').closest('li').removeClass('hide')
+      $cont.find('[href="#!edit"], [href="#!delete"]').closest('li').removeClass('hide')
     } else {
+      // if passed out?
       $cont.find('li > [href="#!return"]').closest('li').removeClass('hide')
       $cont.find('li > [href="#!pass"]').closest('li').addClass('hide')
+      $cont.find('[href="#!edit"], [href="#!delete"]').closest('li').addClass('hide')
     }
   }
   function link_event_unit(banner) {
@@ -361,7 +364,7 @@
         add_banner_to_table(banner)
       // if nothing found!
       if(!sub_banners.data.length)
-        $("#banners table tbody").append('<tr><td colspan=7><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
+        $("#banners table tbody").append('<tr not-found><td colspan=7><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
       else if(sub_banners.totalPages > 1) {
         $('#banners table').after(`<ul class="pagination">
             <li class="waves-effect"><a href="#!" onclick="current_page = 1; update_rows()"><span class="fa fa-angle-double-right" style="position: relative; top: 3px"></span></a></li>

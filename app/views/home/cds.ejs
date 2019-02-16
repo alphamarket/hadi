@@ -140,14 +140,17 @@
   // var events = []
   var cds = []
   var current_page = 1
-  function validate_due_dates($cont, cd) {
+  function validate_due_dates($cont, sundry) {
     // enable/disable the `return/pass` link
-    if(typeof(cd.pass_date) === "undefined" || !cd.pass_date || !cd.pass_date.length) {
+    if(typeof(sundry.pass_date) === "undefined" || !sundry.pass_date || !sundry.pass_date.length) {
       $cont.find('li > [href="#!return"]').closest('li').addClass('hide')
       $cont.find('li > [href="#!pass"]').closest('li').removeClass('hide')
+      $cont.find('[href="#!edit"], [href="#!delete"]').closest('li').removeClass('hide')
     } else {
+      // if passed out?
       $cont.find('li > [href="#!return"]').closest('li').removeClass('hide')
       $cont.find('li > [href="#!pass"]').closest('li').addClass('hide')
+      $cont.find('[href="#!edit"], [href="#!delete"]').closest('li').addClass('hide')
     }
   }
   function link_unit(cd) {
