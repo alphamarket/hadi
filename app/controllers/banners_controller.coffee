@@ -31,7 +31,7 @@ class BannersController extends BaseController
         # if any image provided?
         if data.image
           # store the image file
-          $.store_image item
+          $.store_image item, "banner"
           # get the size
           item.image_size = sizeOf(item.image)
         # the output data
@@ -58,7 +58,7 @@ class BannersController extends BaseController
     # if any image provided?
     if data.image
       # store the image file
-      $.store_image data
+      $.store_image data, "banner"
       # get the size
       data.image_size = sizeOf(data.image)
     # save the db

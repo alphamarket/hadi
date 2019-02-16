@@ -22,13 +22,13 @@ module.exports = {
       when 'R' then 'gif'
       when 'U' then 'webp'
 
-  store_image: (data) ->
+  store_image: (data, prefix) ->
     # fetch the image
     image = data["image"]
     # fetch the image md5 hash
     image_hash = crypto.createHash('md5').update(image).digest("hex") if image
     # update the image file path considering the data & image details
-    data.image = "#{upload_path}/banner-#{data.id}-#{image_hash}.#{@image_extension(image)}" if image
+    data.image = "#{upload_path}/#{prefix}-#{data.id}-#{image_hash}.#{@image_extension(image)}" if image
     # write the image to the target file
     fs.writeFileSync(data.image, image, 'base64') if image
 
