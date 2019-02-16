@@ -162,6 +162,7 @@
   function add_banner_to_table(banner) {
     if(typeof(banner) === "undefined") return
     $('form').each(function() { this.reset() })
+    $('table tr[not-found]').remove()
     var $cont = $("#banners table tbody")
     _eu = link_event_unit(banner); event = _eu[0], unit = _eu[1]
     $cont.append(`<tr row-id="u${banner.id}" data-id="${banner.id}"></tr>`)

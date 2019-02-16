@@ -1,7 +1,7 @@
 <%- include(app_path + "/views/layouts/header.ejs") %>
 <div class="font-56 purple-text mb-15">
   <i class="font-56 fa fa-book" xstyle="position: relative; top: 20px;"></i>
-  کتاب‌ها
+  کتابخانه
   <hr class="purple m-0 height-2" />
 </div>
 <div class="row p-40 center-align" style='padding-top: 10px !important'>
@@ -162,6 +162,7 @@
   function add_book_to_table(book) {
     if(typeof(book) === "undefined") return
     $('form').each(function() { this.reset() })
+    $('table tr[not-found]').remove()
     var $cont = $("#books table tbody")
     unit = link_unit(book);
     $cont.append(`<tr row-id="u${book.id}" data-id="${book.id}"></tr>`)
@@ -360,7 +361,7 @@
         add_book_to_table(book)
       // if nothing found!
       if(!sub_books.data.length)
-        $("#books table tbody").append('<tr><td colspan=6><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
+        $("#books table tbody").append('<tr not-found><td colspan=6><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
       else if(sub_books.totalPages > 1) {
         $('#books table').after(`<ul class="pagination">
             <li class="waves-effect"><a href="#!" onclick="current_page = 1; update_rows()"><span class="fa fa-angle-double-right" style="position: relative; top: 3px"></span></a></li>

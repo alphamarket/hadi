@@ -3,16 +3,16 @@ moment = require('moment-jalaali')
 
 require("#{app_path}/helpers/include_all")
 
-class CDsController extends BaseController
+class SundriesController extends BaseController
   constructor: (args) ->
     super()
 
   list_action: (args) ->
-    $.response_success db.select 'cds'
+    $.response_success db.select 'sundries'
 
   update_action: (data) ->
     out = null
-    db.update 'cds',
+    db.update 'sundries',
       (item) ->
         # find by id
         item.id.toString() is data.id
@@ -31,7 +31,7 @@ class CDsController extends BaseController
         # if any image provided?
         if data.image
           # store the image file
-          $.store_image item, "cd"
+          $.store_image item, "sundry"
           # get the size
           item.image_size = sizeOf(item.image)
         # the output data
@@ -42,7 +42,7 @@ class CDsController extends BaseController
     $.response_success out
 
   delete_action: (data) ->
-    $.response_success db.delete 'cds', (item) -> item.id.toString() is data.id.toString()
+    $.response_success db.delete 'sundries', (item) -> item.id.toString() is data.id.toString()
 
   create_action: (data) ->
     # prepare the data values
@@ -50,7 +50,7 @@ class CDsController extends BaseController
     # init the unit if not set
     data.unit ||= ""
     # insert the data into database and get the references object to the inserted data
-    data = db.insert 'cds', data
+    data = db.insert 'sundries', data
     # convert persian date to date object
     data.return_date = moment(data.return_date, 'jYYYY/jM/jD').toDate() if data.return_date
     # convert persian date to date object
@@ -58,7 +58,7 @@ class CDsController extends BaseController
     # if any image provided?
     if data.image
       # store the image file
-      $.store_image data, "cd"
+      $.store_image data, "sundry"
       # get the size
       data.image_size = sizeOf(data.image)
     # save the db
@@ -66,4 +66,4 @@ class CDsController extends BaseController
     # send the created image to the client
     $.response_success data
 
-module.exports = CDsController
+module.exports = SundriesController

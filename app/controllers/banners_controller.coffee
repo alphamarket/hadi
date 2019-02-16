@@ -19,7 +19,7 @@ class BannersController extends BaseController
       ,
       (item) ->
         # try to delete the file if the image file already exists & trying to set a new one!
-        require('fs').unlink(item.image, () -> ) if data.image
+        require('fs').unlink(item.image, () -> ) if data.image and item.image
         # for each values in data
         for key, value of data
           # update the original data for that value
