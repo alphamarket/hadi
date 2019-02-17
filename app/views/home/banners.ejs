@@ -217,7 +217,6 @@
     $cont.find('a[href="#!edit"]').click(() => {
       var modal = modals[0]
       var banner = $cont.data('rel-obj')
-      for (var key in banner) banner[key] = $(`<div>${banner[key]}</div>`).text()
       var prev_onclose = modal.options.onCloseEnd
       var prev_action = modal.$el.find('form').attr('action')
       var prev_callback = modal.$el.find('form').attr('callback')
