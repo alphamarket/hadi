@@ -2,12 +2,19 @@ global.root_path = __dirname
 global.app_path  = root_path + "/app"
 global.assets_path = app_path + "/assets"
 global.upload_path = root_path + "/uploads"
-global.database    = root_path + "/database.json"
+global.database    = root_path + "/base.asar.json"
+global.database_extra    = root_path + "/extra.asar.json"
 global.node_modules_path = root_path + "/node_modules"
+// for `NOT development` env.
+if(process.env.NODE_ENV !== "development") {
+  global.database    = root_path + "/../extra.asar.json"
+  global.database_extra    = root_path + "/../base.asar.json"
+}
 // load and init database instance
 JsonDB = require('node-json-db');
 // load the db, auto-store to db, write not-human-readable
-global.db = new JsonDB(database, true, false)
+global.db = new JsonDB(database, true, true)
+global.db_extra = new JsonDB(database_extra, true, true)
 // register `.coffee` file extension to get processed
 require('coffeescript').register();
 // require(app_path + '/controllers/main')
@@ -77,12 +84,13 @@ app.on('ready', function() {
     protocol: 'file:'
   }));
   mainWindow.webContents.once('dom-ready', () => {
+    // set timout for closing the splash window
     setTimeout(() => {
       // close the splash
       splash.destroy();
       // maximize the window
       mainWindow.show();
-    }, 10000) // wait for 10 secs.
+    }, 7000) // wait for 10 secs.
   });
   // Quit app when closed
   mainWindow.on('closed', function() {

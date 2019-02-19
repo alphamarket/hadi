@@ -12,13 +12,6 @@
   url('../../fonts/IranNastaliq.ttf') format('truetype'),
   url('../../fonts/IranNastaliq.woff') format('woff');
 }
-@font-face {
-	font-family: 'BZar';
-	src:
-		url('../../fonts/BZar.eot') format('eot'),
-		url('../../fonts/BZar.ttf') format('truetype'),
-		url('../../fonts/BZar.woff') format('woff');
-}
 /* IranSans fonts */
 @font-face {
 	font-family: 'IranSans';
@@ -62,11 +55,11 @@
 }
 
 .font-fa-nastaliq {
-  font-family: 'IranNastaliq', 'IranSans', 'BZar', 'Helvetica Neue', Helvetica, Arial, sans-serif!important;
+  font-family: 'IranNastaliq', 'IranSans', 'Helvetica Neue', Helvetica, Arial, sans-serif!important;
 }
 
 .font-fa {
-  font-family: 'IranSans', 'BZar', 'Helvetica Neue', Helvetica, Arial, sans-serif!important;
+  font-family: 'IranSans', 'Helvetica Neue', Helvetica, Arial, sans-serif!important;
 }
 
 .font-en {
