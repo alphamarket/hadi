@@ -4,3 +4,4 @@ Thumbs.db*
 installations
 uploads
 .sass-cache
+*.asar.json

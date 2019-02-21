@@ -13,8 +13,8 @@
     "dist:asar": "for D in dist/*/; do asar p $D/resources/app $D/resources/app.asar; rm $D/resources/app -rf; done",
     "dist:init_database": "for D in dist/*/; do cp init.d/base.asar.json init.d/extra.asar.json $D/resources; rm -fr $D/resources/app/init.d; done;",
     "dist:linux": "export APP_DIR=`pwd` && cd `mktemp -d -t hadiXXXXXXXXXXXXXX` && cp -r $APP_DIR . && export GWD=`pwd` && cd hadi && export PWD=`pwd` && yarn dist:prepare && electron-packager . Hadi --platform=linux --arch=x64 --out=dist --overwrite && yarn dist:postpare",
-    "dist:win32": "electron-packager . Hadi --platform=win32 --arch=x64 --out=dist --overwrite # && cd dist/Hadi-win32-x64/resources && asar p app app.asar && rm app -rf",
-    "dist:win32_ia32": "electron-packager . Hadi --platform=win32 --arch=ia32 --out=dist --overwrite # && cd dist/Hadi-win32-ia32/resources && asar p app app.asar && rm app -rf",
+    "dist:win32": "export APP_DIR=`pwd` && cd `mktemp -d -t hadiXXXXXXXXXXXXXX` && cp -r $APP_DIR . && export GWD=`pwd` && cd hadi && export PWD=`pwd` && yarn dist:prepare && electron-packager . Hadi --platform=win32 --arch=x64 --out=dist --overwrite && yarn dist:postpare",
+    "dist:win32_ia32": "export APP_DIR=`pwd` && cd `mktemp -d -t hadiXXXXXXXXXXXXXX` && cp -r $APP_DIR . && export GWD=`pwd` && cd hadi && export PWD=`pwd` && yarn dist:prepare && electron-packager . Hadi --platform=win32 --arch=ia32 --out=dist --overwrite && yarn dist:postpare",
     "postinstall": "electron-builder install-app-deps"
   },
   "repository": {

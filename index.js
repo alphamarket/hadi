@@ -28,9 +28,9 @@ if(process.env.NODE_ENV !== "development") {
 }
 // load and init database instance
 const JsonDB = require('node-json-db');
-// load the db, auto-store to db, write not-human-readable
-global.db = new JsonDB(database, true, true)
-global.db_extra = new JsonDB(database_extra, true, true)
+// load the db, auto-store to db, write human-readable
+global.db = new JsonDB(database, true, false)
+global.db_extra = new JsonDB(database_extra, true, false)
 // register `.coffee` file extension to get processed
 require('coffeescript').register();
 // require(app_path + '/controllers/main')

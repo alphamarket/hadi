@@ -1,4 +1,6 @@
 window.refresh_events = () => {
+  // prevent accidentally overflow setting on body 
+  $('body').css('overflow', 'unset')
   // trigger refersh events on ajax complete
   $(document).off("ajaxSuccess").ajaxSuccess(refresh_events);
   // check for limited version

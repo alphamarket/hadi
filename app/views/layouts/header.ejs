@@ -32,16 +32,16 @@
       #sidebar li .fa-chevron-left {
         display: none;
       }
+      #sidebar li.active .fa-chevron-left,
+      #sidebar li:hover .fa-chevron-left {
+        display: inline !important
+      }
       #sidebar li.onloading .fa-spinner {
         display: inline-block;
       }
       #sidebar li.onloading .fa:not(.fa-spinner),
       #sidebar li.onloading .material-icons {
         display: none;
-      }
-      #sidebar li.active .fa-chevron-left,
-      #sidebar li:hover .fa-chevron-left {
-        display: inline;
       }
       #sidebar li:not(.header).active,
       #sidebar li:not(.header):hover {
@@ -67,11 +67,24 @@
         color: #dc3545;
         border-color: #dc3545 !important
       }
+      /* Extra small devices (phones, 600px and down) */
+      @media only screen and (max-width: 600px) { }
+
+      /* Small devices (portrait tablets and large phones, 600px and up) */
+      @media only screen and (min-width: 600px) { }
+
+      /* Medium devices (landscape tablets, 768px and up) */
+      @media only screen and (min-width: 768px) { }
+
+      /* Large devices (laptops/desktops, 992px and up) */
+      @media only screen and (min-width: 992px) {
+        #sidebar { position: fixed !important; }
+      }
     </style>
   </head>
   <body class="font-fa">
     <div class="row">
-      <ul id="sidebar" class="col s12 m3 right-aligned fa" style="background-color: #ffffff66; border-left: 2px solid #aaaf8133; position: fixed; top: -20px; height: 110%;">
+      <ul id="sidebar" class="col s12 l3 right-aligned fa" style="background-color: #ffffff66; border-left: 2px solid #aaaf8133; top: -20px; height: 110%;">
         <li class="center-align header" style="position: relative; top: 50px">
           <div class="user-view">
             <div class="background">
@@ -131,4 +144,4 @@
         })
       </script>
 
-      <div class="col s12 m9 pr-10 pt-15">
+      <div class="col s12 l9 pr-10 pt-15">
