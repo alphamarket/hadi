@@ -146,8 +146,11 @@
           units = response_data(resp)
           $("#units table tbody").html('')
           for (var unit of units) { add_unit_to_table(unit) }
+          // if nothing found!
+          if(!units.length)
+            $("#units table tbody").append('<tr not-found><td colspan=5><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
         }
-      })
+      }, true)
       var units_search_timeout = null
       $('#units_search').off('keyup').on('keyup', () => {
         clearTimeout(units_search_timeout)
