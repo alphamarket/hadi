@@ -106,7 +106,7 @@ app.on('ready', function() {
       splash.destroy();
       // maximize the window
       mainWindow.show();
-    }, 7000) // wait for 10 secs.
+    }, 10000) // wait for 10 secs.
   });
   // Quit app when closed
   mainWindow.on('closed', function() {
