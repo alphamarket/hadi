@@ -15,11 +15,19 @@ if(global.limited_version) {
 }
 // for `NOT development` env.
 if(process.env.NODE_ENV !== "development") {
-  global.database    = root_path + "/../extra.asar.json"
-  global.database_extra    = root_path + "/../base.asar.json"
+  global.upload_path = root_path + "/../uploads"
+  global.database    = root_path + "/../base.asar.json"
+  global.database_extra    = root_path + "/../extra.asar.json"
+  // if we are in a asar file?
+  if(root_path.endsWith('.asar')) {
+    // exclude the `.asar` file's complications from the resources' path
+    global.upload_path = global.upload_path.replace('/app.asar/..', "")
+    global.database    = global.database.replace('/app.asar/..', "")
+    global.database_extra    = global.database_extra.replace('/app.asar/..', "")
+  }
 }
 // load and init database instance
-JsonDB = require('node-json-db');
+const JsonDB = require('node-json-db');
 // load the db, auto-store to db, write not-human-readable
 global.db = new JsonDB(database, true, true)
 global.db_extra = new JsonDB(database_extra, true, true)
@@ -103,7 +111,7 @@ app.on('ready', function() {
   // Quit app when closed
   mainWindow.on('closed', function() {
     if (process.platform !== 'darwin') {
-      // while preventing the null-write of databse
+      // while preventing the null-write of database
       if(Object.keys(db.getData('/')).length)
         // save any changes to database
         db.save(true)

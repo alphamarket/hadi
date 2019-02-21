@@ -178,5 +178,5 @@ window.clone = function(obj) {
 // closes all open modals
 window.close_all_models = () => { for (var modal of modals) { modal.close() } }
 
-// send_request('/user/create', {image: read_image(_g('root_path') + "/image.jpg") }, (data) => { console.log(data) })
+// EXAMPLE: send_request('/user/create', {image: read_image(_g('root_path') + "/image.jpg") }, (data) => { console.log(data) })
 window.read_file = (path) => { return Buffer.from(fs.readFileSync(path)).toString('base64') }

@@ -30,6 +30,7 @@ db.make_read_only = (path) ->
   db.push(db.route_to(path, true), meta)
 
 db.count = (path) ->
+  return 0 if not db.exists(db.route_to(path))
   db.collection(path).length
 
 db.last = (path) ->
