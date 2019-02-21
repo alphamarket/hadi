@@ -21,6 +21,13 @@ window.goto = (url) => {
     dataType: 'html',
     success: function(data) {
       $('body').html(data.replace(/^.*?<body[^>]*>(.*?)<\/body>.*?$/s,"$1"))
+      // activate the sidebar's menu
+      if($(`body #sidebar li[href="${url}"]`).length) {
+        $(`body #sidebar li[href="${url}"]`)
+          .addClass('active')
+          .siblings('li.active')
+            .removeClass('active')
+      }
     }
   }).fail(function() {
     alert("خطا در بارگذاری صفحه!");

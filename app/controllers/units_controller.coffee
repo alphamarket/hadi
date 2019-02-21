@@ -24,10 +24,17 @@ class UnitsController extends BaseController
     $.response_success out
 
   create_action: (data) ->
+    # check for limited version
+    return $.response_fail global.limited_version_error_msg if global.limited_version and db.count('units') >= limited_version_limit
+    # prepare the data values
     data = $.map(data, (el) -> $.trim(el, true))
+    # check for validations
     return $.response_fail message: 'عنوان یگان نمی‌تواند خالی باشد' if not data.title.length
+    # insert the data
     data = db.insert 'units', data
+    # save the database
     db.save()
+    # response the saved data
     $.response_success data
 
 module.exports = UnitsController

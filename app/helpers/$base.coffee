@@ -58,7 +58,9 @@ module.exports = {
   response_fail: (resp) ->
     {
       status: "failed",
-      response: resp
+      response: {
+        message: resp
+      }
     }
 
   bench_mark: (callback) ->

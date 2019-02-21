@@ -1,0 +1,59 @@
+<%- include(app_path + "/views/layouts/header.ejs") %>
+<div class="font-56 mb-15 mt-30" style="color: #dc3545">
+  <i class="font-56 fas fa-info-circle" style="position: relative; top: 10px;"></i>
+  درباره برنامه
+  <span class="limited_version"></span>
+  <hr class="m-0 height-2" style="background-color: #dc3545"/>
+</div>
+<div class="row">
+  <div class="col s8 offset-s2 font-fa font-25 line-height-55">
+    <div style="text-align: justify">
+      <p class="font-fa-nastaliq center-align font-60">بِسْمِ ٱللّٰهِ ٱلرَّحْمٰنِ ٱلرَّحِيمِ‎</p>
+      <p>
+        <span class="font-fa-nastaliq">
+          با سلام و صلوات بر محمد و آل محمد (ص)،
+        </span>
+        سامانه جامع مدیریت اقلام فرهنگی عقیدتی سیاسی «هادی» در فرماندهی انتظامی شهرستان اصفهان با مشاوره و ایده پردازی
+        <span class="blue-text">«جناب سروان هادی فاضلی» جمعی عقیدتی سیاسی</span>
+        شهرستان اصفهان
+        و پیاده سازی و برنامه نویسی توسط
+        <span class="blue-text">«ستوان‌سوم وظیفه داریوش حسن‌پور پ.خ. آبان ۹۶» جمعی فاوا</span>
+        شهرستان اصفهان پیاده‌سازی و به اجرا درآمده است.
+      </p>
+      <p>
+        انشالله تلاش و همتی که در پیاده‌سازی این برنامه جهت بهبود و افزایش راندمان کاری سازمان عقیدتی و سیاسی کشور صورت گرفته مورد قبول حق تعالی و
+        حضرت امام زمان (عج الله تعالی فرجه و الشریف) قرار گیرد. انشالله که با روحیه جهادی و انقلابی و بکار گیری کلیه نیروهای متخصص و مومن به سربلندی کشور اسلامی ایران
+        در راستای کمک به ظهور آقا امام زمان (عج) و خشنودی دل مبارک و پاک خانم فاطمه زهرا (ع) قدم بگذاریم (آمین).
+      </p>
+      <div class="hide limited_version_notify line-height-60">
+        <p>
+          <span class="red-text font-34">توجه: </span>
+          با توجه به اینکه نسخه برنامه‌ای که در اختیار شما هست تحت عنوان <span class="red-text">نسخه محدود</span>
+          تولید و صادر شده است، لذا هرکونه کپی‌برداری به هر طریق ممکن و یا دستکاری در برنامه به هر عنوان بدون رضایت برنامه نویس آن قانونا و شرعا حرام می‌باشد.
+        </p>
+        <p>
+          <b>محدودیت‌های این نسخه:</b>
+          در این نسخه امکان ثبت کردن بیشتر از ۱۰ عدد برای هریک از موارد موجود در برنامه مقدور نمی‌باشد (یا به عبارت دیگر: حداکثر می‌توانید ۱۰ عدد داده به ازای هریک از گزینه‌های موجود در منوی برنامه وارد کنید).
+        </p>
+      </div>
+      <p class="mt-40 left left-align font-fa-nastaliq line-height-60 font-30">
+        ستوان‌سوم وظیفه داریوش حسن پور<br />
+        دهه فجر ۱۳۹۷
+      </p>
+    </div>
+  </div>
+</div>
+<style media="screen">
+  .limited_version_notify {
+    border-right: 10px solid #dc3545;
+    padding: 20px
+  }
+</style>
+<script type="text/javascript">
+  $(function() {
+    if(_g('limited_version')) {
+      $('.limited_version_notify').removeClass('hide')
+    }
+  })
+</script>
+<%- include(app_path + "/views/layouts/footer.ejs") %>

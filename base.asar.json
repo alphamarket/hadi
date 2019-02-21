@@ -29,7 +29,7 @@
     },
     "units": {
         "meta": {
-            "count": 31
+            "count": 35
         },
         "data": [
             {
@@ -81,18 +81,42 @@
                 "id": 21
             },
             {
-                "address": "میرزاطاهر",
+                "address": "",
                 "tel": "",
-                "title": "کلانتری ۲۸",
-                "created_at": "2019-02-09T18:10:50.377Z",
-                "updated_at": "2019-02-09T18:10:50.377Z",
-                "id": 25
+                "title": "ک33",
+                "created_at": "2019-02-21T09:20:37.663Z",
+                "updated_at": "2019-02-21T09:20:37.663Z",
+                "id": 32
+            },
+            {
+                "address": "",
+                "tel": "",
+                "title": "ک34",
+                "created_at": "2019-02-21T09:20:44.788Z",
+                "updated_at": "2019-02-21T09:20:44.788Z",
+                "id": 33
+            },
+            {
+                "address": "",
+                "tel": "",
+                "title": "ک 77",
+                "created_at": "2019-02-21T09:20:56.336Z",
+                "updated_at": "2019-02-21T09:20:56.336Z",
+                "id": 34
+            },
+            {
+                "address": "",
+                "tel": "",
+                "title": "کلانتری 28",
+                "created_at": "2019-02-21T09:22:41.921Z",
+                "updated_at": "2019-02-21T09:22:41.921Z",
+                "id": 35
             }
         ]
     },
     "banners": {
         "meta": {
-            "count": 19
+            "count": 22
         },
         "data": [
             {
@@ -133,23 +157,11 @@
             },
             {
                 "desc": "",
-                "event": "2",
-                "title": "بنر عدم تحویلی",
+                "title": "dskmdskm",
                 "unit": "",
-                "created_at": "2019-02-12T17:31:07.148Z",
-                "updated_at": "2019-02-12T17:31:07.148Z",
-                "id": 18
-            },
-            {
-                "desc": "تست برگشت",
-                "event": "3",
-                "title": "فیلتر جدید",
-                "unit": "",
-                "created_at": "2019-02-12T17:43:40.644Z",
-                "updated_at": "2019-02-12T17:44:00.049Z",
-                "id": "19",
-                "pass_date": "2019-02-11T20:30:00.000Z",
-                "return_date": "2020-03-01T20:30:00.000Z"
+                "created_at": "2019-02-21T09:11:13.369Z",
+                "updated_at": "2019-02-21T09:11:13.369Z",
+                "id": 22
             }
         ]
     },
@@ -200,9 +212,9 @@
             {
                 "desc": "",
                 "title": "dksjdksmds",
-                "unit": "",
+                "unit": null,
                 "created_at": "2019-02-16T15:20:12.851Z",
-                "updated_at": "2019-02-16T15:39:00.175Z",
+                "updated_at": "2019-02-21T06:56:35.136Z",
                 "id": "6",
                 "image": "/home/dariush/Desktop/iProjects/desktop/hadi/uploads/cd-6-bd5fdacc854241674db964d029c35d96.jpg",
                 "image_size": {
@@ -211,9 +223,9 @@
                     "orientation": 1,
                     "type": "jpg"
                 },
-                "pass_date": "2019-02-15T20:30:00.000Z",
-                "passed_to": "s",
-                "return_date": ""
+                "pass_date": null,
+                "passed_to": null,
+                "return_date": null
             }
         ]
     },

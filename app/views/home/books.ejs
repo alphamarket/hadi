@@ -1,8 +1,9 @@
 <%- include(app_path + "/views/layouts/header.ejs") %>
-<div class="font-56 purple-text mb-15">
+<div class="font-56 mb-15 mt-30" style="color: #28a745">
   <i class="font-56 fa fa-book" xstyle="position: relative; top: 20px;"></i>
   کتابخانه
-  <hr class="purple m-0 height-2" />
+  <span class="limited_version"></span>
+  <hr class="m-0 height-2" style="background-color: #28a745"/>
 </div>
 <div class="row p-40 center-align" style='padding-top: 10px !important'>
   <div class="col s12">
@@ -216,7 +217,7 @@
     $cont.data('rel-obj', book)
     $cont.find('a[href="#!edit"]').click(() => {
       var modal = modals[0]
-      var book = $cont.data('rel-obj')
+      var book = clone(books[books.findIndex(o => { return o.id === $cont.data('rel-obj').id })])
       var prev_onclose = modal.options.onCloseEnd
       var prev_action = modal.$el.find('form').attr('action')
       var prev_callback = modal.$el.find('form').attr('callback')
@@ -514,7 +515,7 @@
           found = found.map((e) => {
             e = clone(e)
             for (var key in e)
-              if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
+              if(typeof(e[key]) !== "undefined" && key !== "image" && e[key] && typeof(e[key]) === "string")
                 e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
             return e
           })

@@ -5,6 +5,14 @@ global.upload_path = root_path + "/uploads"
 global.database    = root_path + "/base.asar.json"
 global.database_extra    = root_path + "/extra.asar.json"
 global.node_modules_path = root_path + "/node_modules"
+// check if the current program should perform as LIMITED VERSION of itself or not!
+global.limited_version = true
+// for limited version
+if(global.limited_version) {
+  // every model can store upto this amount!
+  global.limited_version_limit = 10
+  global.limited_version_error_msg = `برنامه حاضر به عنوان «نسخه محدود» در حال اجرا می‌باشد لذا ثبت کردن بیشتر از ${limited_version_limit} عدد مقدور نیست. جهت دریافت نسخه کامل این برنامه با برنامه نویس آن هماهنگ شوید.`
+}
 // for `NOT development` env.
 if(process.env.NODE_ENV !== "development") {
   global.database    = root_path + "/../extra.asar.json"

@@ -1,6 +1,9 @@
 window.refresh_events = () => {
   // trigger refersh events on ajax complete
   $(document).off("ajaxSuccess").ajaxSuccess(refresh_events);
+  // check for limited version
+  if(_g('limited_version'))
+    $('.limited_version').html('<span class="font-24 red-text">{ نسخه محدود }</span>')
   // set moment.js locale
   moment.locale('fa');
   // catch links with valid links and relocate the window as desired!
@@ -56,7 +59,9 @@ window.refresh_events = () => {
       })
     }
     // append the action should be taken to the data
-    send_request($(this).attr('action'), data, $(this).attr('callback'))
+    send_request($(this).attr('action'), data, $(this).attr('callback'), true)
+    // reset after submit!
+    $(this)[0].reset()
     // prevent form to really submit
     return false
   });

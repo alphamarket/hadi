@@ -15,67 +15,120 @@
     <script src="<%= assets_path %>/javascripts/application.js"></script>
     <!-- Insert this line after script imports -->
     <script>if (window.module) module = window.module;</script>
+    <style media="screen">
+      #sidebar li:not(.header) {
+        padding: 10px 20px 20px 0px;
+        font-size: 20px
+      }
+      #sidebar li .fa,
+      #sidebar li .fas,
+      #sidebar li .material-icons {
+        position: relative;
+        top: 10px;
+        padding-left: 10px;
+        font-size: 2.5rem;
+      }
+      #sidebar li .fa-spinner,
+      #sidebar li .fa-chevron-left {
+        display: none;
+      }
+      #sidebar li.onloading .fa-spinner {
+        display: inline-block;
+      }
+      #sidebar li.onloading .fa:not(.fa-spinner),
+      #sidebar li.onloading .material-icons {
+        display: none;
+      }
+      #sidebar li.active .fa-chevron-left,
+      #sidebar li:hover .fa-chevron-left {
+        display: inline;
+      }
+      #sidebar li:not(.header).active,
+      #sidebar li:not(.header):hover {
+        cursor: pointer;
+        font-size: 22px;
+        box-shadow: 0 0 15px 0
+      }
+      #sidebar li:not(.header):nth-child(3n).active,
+      #sidebar li:not(.header):nth-child(3n):hover {
+        /* blue */
+        color: #007bff;
+        border-color: #007bff !important
+      }
+      #sidebar li:not(.header):nth-child(3n + 1).active,
+      #sidebar li:not(.header):nth-child(3n + 1):hover {
+        /* green */
+        color: #28a745;
+        border-color: #28a745 !important
+      }
+      #sidebar li:not(.header):nth-child(3n + 2).active,
+      #sidebar li:not(.header):nth-child(3n + 2):hover {
+        /* red */
+        color: #dc3545;
+        border-color: #dc3545 !important
+      }
+    </style>
   </head>
   <body class="font-fa">
     <div class="row">
-      <ul id="slide-out" class="col s12 m2 right-aligned fa transparent" style="border-left: 2px solid #aaaf8133; position: fixed; top: -20px; height: 110%;">
-        <li class="center-align" style="position: relative; top: 50px">
+      <ul id="sidebar" class="col s12 m3 right-aligned fa" style="background-color: #ffffff66; border-left: 2px solid #aaaf8133; position: fixed; top: -20px; height: 110%;">
+        <li class="center-align header" style="position: relative; top: 50px">
           <div class="user-view">
             <div class="background">
               <img src="<%= assets_path %>/images/naja.png" height="140">
             </div>
           </div>
         </li>
-        <li class="border height-80 w-100" style="margin-top: 110px; border-color: #aaaaaadd !important">
-          <span class="material-icons">home</span> صفحه اصلی</a>
+        <li class="border height-80 w-100 active" style="margin-top: 110px;" href="/home/main">
+          <span class="fa fa-spinner fa-spin"></span>
+          <span class="material-icons">home</span> صفحه اصلی
+          <span class="fa fa-chevron-left left"></span>
         </li>
-        <li class="border height-80 w-100" style="margin-top: 20px; border-color: #aaaaaadd !important">
-          <span class="material-icons">photo_camera</span> بنرها</a>
+        <li class="border height-80 w-100" style="margin-top: 20px;" href="/home/banners">
+          <span class="fa fa-spinner fa-spin"></span>
+          <span class="material-icons">photo_camera</span> بنرها
+          <span class="fa fa-chevron-left left"></span>
         </li>
-        <li class="border height-80 w-100" style="margin-top: 20px; border-color: #aaaaaadd !important">
+        <li class="border height-80 w-100" style="margin-top: 20px;" href="/home/books">
+          <span class="fa fa-spinner fa-spin"></span>
           <span class="fa fa-book"></span> کتابخانه</a>
+          <span class="fa fa-chevron-left left"></span>
         </li>
-        <li class="border height-80 w-100" style="margin-top: 20px; border-color: #aaaaaadd !important">
-          <span class="material-icons">donut_small</span> لوح فشرده</a>
+        <li class="border height-80 w-100" style="margin-top: 20px;" href="/home/cds">
+          <span class="fa fa-spinner fa-spin"></span>
+          <span class="material-icons">donut_small</span> لوح فشرده
+          <span class="fa fa-chevron-left left"></span>
         </li>
-        <li class="border height-80 w-100" style="margin-top: 20px; border-color: #aaaaaadd !important">
-          <span class="fa fa-ellipsis-h"></span> اقلام فرهنگی</a>
+        <li class="border height-80 w-100" style="margin-top: 20px;" href="/home/sundries">
+          <span class="fa fa-spinner fa-spin"></span>
+          <span class="fa fa-ellipsis-h"></span> اقلام فرهنگی
+          <span class="fa fa-chevron-left left"></span>
         </li>
-        <li class="border height-80 w-100" style="margin-top: 20px; border-color: #aaaaaadd !important">
-          <span class="material-icons">blur_on</span> یگان‌ها</a>
+        <li class="border height-80 w-100" style="margin-top: 20px;" href="/home/units">
+          <span class="fa fa-spinner fa-spin"></span>
+          <span class="material-icons">blur_on</span> یگان‌ها
+          <span class="fa fa-chevron-left left"></span>
         </li>
-        <li class="border height-80 w-100" style="margin-top: 20px; border-color: #aaaaaadd !important">
-          <span class="material-icons">blur_on</span> درباره برنامه</a>
+        <li class="border height-80 w-100" style="margin-top: 20px;" href="/home/about">
+          <span class="fa fa-spinner fa-spin"></span>
+          <span class="fas fa-info-circle"></span> درباره برنامه
+          <span class="fa fa-chevron-left left"></span>
         </li>
-        <li class="border height-80 w-100" style="margin-top: 20px; border-color: #aaaaaadd !important">
-          <span class="material-icons">blur_on</span> خروج از برنامه</a>
+        <li class="border height-80 w-100" style="margin-top: 20px;" onclick="require('electron').remote.getCurrentWindow().close()">
+          <span class="fa fa-spinner fa-spin"></span>
+          <span class="fa fa-times"></span> خروج از برنامه
+          <span class="fa fa-chevron-left left"></span>
         </li>
       </ul>
-      <ul id="slide-out" class="col s2 sidenav sidenav-fixed right-aligned fa hide">
-        <li class="center-align">
-          <div class="user-view" style="height: 150px">
-            <div class="background">
-              <img src="<%= assets_path %>/images/naja.png" height="140">
-            </div>
-          </div>
-          <p class="font-fa-nastaliq font-30 line-height-64" style="font-weight: 100;">
-            سامانه جامع مدیریت اقلام فرهنگی<br />
-            عقیدتی-سیاسی
-            «هادی»
-          </p>
-        </li>
-        <li><a href="/home/main" class="font-20"><span class="material-icons">home</span> صفحه اصلی</a></li>
-        <li><a href="/home/banners" class="font-20"><span class="material-icons">photo_camera</span> بنرها</a></li>
-        <li><a href="/home/books" class="font-20"><span class="fa fa-book"></span> کتابخانه</a></li>
-        <li><a href="/home/cds" class="font-20"><span class="material-icons">donut_small</span> لوح فشرده</a></li>
-        <li><a href="/home/sundries" class="font-20"><span class="fa fa-ellipsis-h"></span> اقلام فرهنگی</a></li>
-        <li><a href="/home/units" class="font-20"><span class="material-icons">blur_on</span> یگان‌ها</a></li>
-        <li><a href="#!" class="red-text" onclick="require('electron').remote.getCurrentWindow().close()"><span class="fas fa-sign-out-alt fa-2x ml-5"></span> خروج از برنامه</a></li>
-      </ul>
 
-      <style media="screen">
-        #slide-out.sidenav .material-icons,
-        #slide-out.sidenav .fas { position: relative; top: 7px }
-      </style>
+      <script type="text/javascript">
+        $(function() {
+          $("#sidebar li:not(.header)[href]").click(function(e) {
+            e.preventDefault();
+            $(this).addClass('onloading')
+            goto($(this).attr('href'))
+          })
+        })
+      </script>
 
-      <div class="col s12 m10 pr-10 pt-15">
+      <div class="col s12 m9 pr-10 pt-15">

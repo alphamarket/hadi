@@ -45,6 +45,8 @@ class SundriesController extends BaseController
     $.response_success db.delete 'sundries', (item) -> item.id.toString() is data.id.toString()
 
   create_action: (data) ->
+    # check for limited version
+    return $.response_fail global.limited_version_error_msg if global.limited_version and db.count('sundries') >= limited_version_limit
     # prepare the data values
     data = $.map(data, (el) -> $.trim(el, true))
     # init the unit if not set
