@@ -84,7 +84,10 @@ body {
 
   input, textarea { padding: 7px; }
 
-  .modal { overflow: hidden; }
+  .modal {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 
   .border {
     border: 1px solid #dee2e6 !important;

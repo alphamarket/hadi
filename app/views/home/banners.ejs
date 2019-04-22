@@ -408,7 +408,7 @@
           $("#new-banner-modal #events-list").append(`<option value="${e.id}">${e.title}</option>`)
         $("#events").html('')
         var build_event_button = (title, options = { }) => {
-          var out = '<a class="waves-effect waves-light btn ml-10 green lighten-2" data-event '
+          var out = '<a class="waves-effect waves-light btn ml-10 mt-10 green lighten-2" data-event '
           for (key in options) out += key + "='" + options[key] + "' "
           out += "><span class='fa fa-check'></span> " + title + "</a>";
           return out

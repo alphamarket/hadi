@@ -15,6 +15,7 @@
     "dist:linux": "export APP_DIR=`pwd` && cd `mktemp -d -t hadiXXXXXXXXXXXXXX` && cp -r $APP_DIR . && export GWD=`pwd` && cd hadi && export PWD=`pwd` && yarn dist:prepare && electron-packager . Hadi --platform=linux --arch=x64 --out=dist --overwrite && yarn dist:postpare",
     "dist:win32": "export APP_DIR=`pwd` && cd `mktemp -d -t hadiXXXXXXXXXXXXXX` && cp -r $APP_DIR . && export GWD=`pwd` && cd hadi && export PWD=`pwd` && yarn dist:prepare && electron-packager . Hadi --platform=win32 --arch=x64 --out=dist --overwrite && yarn dist:postpare",
     "dist:win32_ia32": "export APP_DIR=`pwd` && cd `mktemp -d -t hadiXXXXXXXXXXXXXX` && cp -r $APP_DIR . && export GWD=`pwd` && cd hadi && export PWD=`pwd` && yarn dist:prepare && electron-packager . Hadi --platform=win32 --arch=ia32 --out=dist --overwrite && yarn dist:postpare",
+    "dist:all": "yarn dist:linux && yarn dist:win32_ia32 && yarn dist:win32",
     "postinstall": "electron-builder install-app-deps"
   },
   "repository": {
