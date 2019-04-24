@@ -6,70 +6,90 @@
   <hr class="m-0 height-2" style="background-color: #dc3545" />
 </div>
 <p>
-  <span class="fa fa-search"></span> برای مشاهده گزارش براساسی هر یک از موارد زیر روی گزینه مورد نظر کلیک کنید.
+  <span class="fa fa-search"></span> برای مشاهده گزارش براساس هر یک از موارد زیر روی گزینه مورد نظر کلیک کنید.
 </p>
 <ul id="tabs-swipe-demo" class="tabs right">
   <li class="tab col s6"><a href="#tab-swipe-2">گزارش گیری جزء</a></li>
-  <li class="tab col s6"><a href="#tab-swipe-1" class=active>گزارش گیری کلی</a></li>
+  <li class="tab col s6"><a href="#tab-swipe-1" class=active>گزارش گیری کل</a></li>
 </ul>
 
 <div class="row p-40 center-align" style='padding-top: 10px !important' id="tab-swipe-1">
   <div class="col s12">
     <p class="right-align pt-20">در این قسمت گزارش کلی از کلیه اقلام عقیدتی-سیاسی ارائه شده است. برای مشاهده گزارش به تفکیک یگان‌ها به قسمت «گزارش گیری جزء» در همین بخش مراجعه کنید.</p>
-    <table class="right-align">
+    <table class="right-align highlight-bundled">
       <tbody>
-        <tr banners>
-          <td rowspan="3">بنرها</td>
+        <tr banners row-id=banners>
+          <td rowspan="4">بنرها</td>
         </tr>
-        <tr class="green-text" banners>
+        <tr banners row-id=banners>
+          <td>تعداد موجود:</td>
+          <td banners-count></td>
+        </tr>
+        <tr class="green-text" banners row-id=banners>
           <td>تعداد تحویلی‌ها:</td>
           <td banners-passed></td>
         </tr>
-        <tr class="red-text" banners>
+        <tr class="red-text" banners row-id=banners>
           <td>تعدادی که باید عودت داده شوند:</td>
           <td banners-should-return should-return></td>
         </tr>
-        <tr books>
-          <td rowspan="3">کتاب‌ها</td>
+        <tr books row-id=books>
+          <td rowspan="4">کتاب‌ها</td>
         </tr>
-        <tr class="green-text">
+        <tr row-id=books>
+          <td>تعداد موجود:</td>
+          <td books-count></td>
+        </tr>
+        <tr class="green-text" row-id=books>
           <td>تعداد تحویلی‌ها:</td>
           <td books-passed></td>
         </tr>
-        <tr class="red-text">
+        <tr class="red-text" row-id=books>
           <td>تعدادی که باید عودت داده شوند:</td>
           <td books-should-return should-return></td>
         </tr>
-        <tr cds>
-          <td rowspan="3">لوح‌های فشرده</td>
+        <tr cds row-id=cds>
+          <td rowspan="4">لوح‌های فشرده</td>
         </tr>
-        <tr class="green-text">
+        <tr row-id=cds>
+          <td>تعداد موجود:</td>
+          <td cds-count></td>
+        </tr>
+        <tr class="green-text" row-id=cds>
           <td>تعداد تحویلی‌ها:</td>
           <td cds-passed></td>
         </tr>
-        <tr class="red-text">
+        <tr class="red-text" row-id=cds>
           <td>تعدادی که باید عودت داده شوند:</td>
           <td cds-should-return should-return></td>
         </tr>
-        <tr sundries>
-          <td rowspan="3">اقلام فرهنگی</td>
+        <tr sundries row-id=sundries>
+          <td rowspan="4">اقلام فرهنگی</td>
         </tr>
-        <tr class="green-text">
+        <tr row-id=sundries>
+          <td>تعداد موجود:</td>
+          <td sundries-count></td>
+        </tr>
+        <tr class="green-text" row-id=sundries>
           <td>تعداد تحویلی‌ها:</td>
           <td sundries-passed></td>
         </tr>
-        <tr class="red-text">
+        <tr class="red-text" row-id=sundries>
           <td>تعدادی که باید عودت داده شوند:</td>
           <td sundries-should-return should-return></td>
         </tr>
-        <tr equipments>
-          <td rowspan="3">تجهیزات نمازخانه‌ها</td>
+        <tr equipments row-id=equipments>
+          <td rowspan="4">تجهیزات نمازخانه‌ها</td>
         </tr>
-        <tr class="green-text">
+        <tr row-id=equipments>
+          <td>تعداد موجود:</td>
+          <td equipments-count></td>
+        </tr>
+        <tr class="green-text" row-id=equipments>
           <td>تعداد تحویلی‌ها:</td>
           <td equipments-passed></td>
         </tr>
-        <tr class="red-text">
+        <tr class="red-text" row-id=equipments>
           <td>تعدادی که باید عودت داده شوند:</td>
           <td equipments-should-return should-return></td>
         </tr>
@@ -139,60 +159,80 @@
   <div id="report-unit-modal" class="modal">
     <div class="modal-content right-align">
       <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><i class="material-icons font-46">playlist_add_check</i> <span style="position: relative; top: -15px">گزارش گیری از <strong title></strong></span></h4>
-      <table class="right-align">
+      <table class="right-align highlight-bundled">
         <tbody>
-          <tr banners>
-            <td rowspan="3">بنرها</td>
+          <tr banners row-id=banners>
+            <td rowspan="4">بنرها</td>
           </tr>
-          <tr class="green-text" banners>
+          <tr banners row-id=banners>
+            <td>تعداد موجود:</td>
+            <td banners-count></td>
+          </tr>
+          <tr class="green-text" banners row-id=banners>
             <td>تعداد تحویلی‌ها:</td>
             <td banners-passed></td>
           </tr>
-          <tr class="red-text" banners>
+          <tr class="red-text" banners row-id=banners>
             <td>تعدادی که باید عودت داده شوند:</td>
             <td banners-should-return should-return></td>
           </tr>
-          <tr books>
-            <td rowspan="3">کتاب‌ها</td>
+          <tr books row-id=books>
+            <td rowspan="4">کتاب‌ها</td>
           </tr>
-          <tr class="green-text">
+          <tr row-id=books>
+            <td>تعداد موجود:</td>
+            <td books-count></td>
+          </tr>
+          <tr class="green-text" row-id=books>
             <td>تعداد تحویلی‌ها:</td>
             <td books-passed></td>
           </tr>
-          <tr class="red-text">
+          <tr class="red-text" row-id=books>
             <td>تعدادی که باید عودت داده شوند:</td>
             <td books-should-return should-return></td>
           </tr>
-          <tr cds>
-            <td rowspan="3">لوح‌های فشرده</td>
+          <tr cds row-id=cds>
+            <td rowspan="4">لوح‌های فشرده</td>
           </tr>
-          <tr class="green-text">
+          <tr row-id=cds>
+            <td>تعداد موجود:</td>
+            <td cds-count></td>
+          </tr>
+          <tr class="green-text" row-id=cds>
             <td>تعداد تحویلی‌ها:</td>
             <td cds-passed></td>
           </tr>
-          <tr class="red-text">
+          <tr class="red-text" row-id=cds>
             <td>تعدادی که باید عودت داده شوند:</td>
             <td cds-should-return should-return></td>
           </tr>
-          <tr sundries>
-            <td rowspan="3">اقلام فرهنگی</td>
+          <tr sundries row-id=sundries>
+            <td rowspan="4">اقلام فرهنگی</td>
           </tr>
-          <tr class="green-text">
+          <tr row-id=sundries>
+            <td>تعداد موجود:</td>
+            <td sundries-count></td>
+          </tr>
+          <tr class="green-text" row-id=sundries>
             <td>تعداد تحویلی‌ها:</td>
             <td sundries-passed></td>
           </tr>
-          <tr class="red-text">
+          <tr class="red-text" row-id=sundries>
             <td>تعدادی که باید عودت داده شوند:</td>
             <td sundries-should-return should-return></td>
           </tr>
-          <tr equipments>
-            <td rowspan="3">تجهیزات نمازخانه‌ها</td>
+          <tr equipments row-id=equipments>
+            <td rowspan="4">تجهیزات نمازخانه‌ها</td>
           </tr>
-          <tr class="green-text">
+          <tr row-id=equipments>
+            <td>تعداد موجود:</td>
+            <td equipments-count></td>
+          </tr>
+          <tr class="green-text" row-id=equipments>
             <td>تعداد تحویلی‌ها:</td>
             <td equipments-passed></td>
           </tr>
-          <tr class="red-text">
+          <tr class="red-text" row-id=equipments>
             <td>تعدادی که باید عودت داده شوند:</td>
             <td equipments-should-return should-return></td>
           </tr>
@@ -208,7 +248,10 @@
   function render_reports($el, reports, categories) {
     // process data for each categories
     categories.forEach(function(section, index) {
-      $el.find(`[${section}-passed]`).html(to_persian_numeric(formatMoney(reports[section].length)) + " عدد")
+      $el.find(`[${section}-count]`).html(to_persian_numeric(formatMoney(reports[section].length)) + " عدد")
+      var passed = reports[section].filter((_b) => {
+        return typeof(_b.pass_date) === "string" && _b.pass_date.length;
+      }).length
       var should_return = reports[section].filter((_b) => {
         var ret_date = moment(new Date(_b.return_date))
         return _b.return_date && ret_date.toString().toLowerCase() !== "invalid date" && ret_date < moment()
@@ -228,17 +271,22 @@
             sub_cats[events[banner.event]] = 0
           sub_cats[events[banner.event]] += 1
         })
-        $el.find('[banners] [rowspan]').attr('rowspan', 3 + Object.keys(sub_cats).length);
+        $el.find('[banners] [rowspan]').attr('rowspan', 4 + Object.keys(sub_cats).length);
         $el.find('[sub_banners]').remove()
         for (var key in sub_cats) {
           $($el.find('[banners]').last()).after(`
-            <tr banners sub_banners>
+            <tr banners sub_banners row-id=banners>
               <td>${key}:</td>
               <td>${to_persian_numeric(formatMoney(sub_cats[key]))} عدد</td>
             </tr>`)
         }
       }
+      $el.find(`[${section}-passed]`).html(to_persian_numeric(formatMoney(passed)) + " عدد");
       $el.find(`[${section}-should-return]`).html(to_persian_numeric(formatMoney(should_return)) + " عدد");
+
+      if(passed == 0)
+        $el.find(`[${section}-passed]`).closest('tr').removeClass('green-text')
+
       if(should_return == 0)
         $el.find(`[${section}-should-return]`).closest('tr').removeClass('red-text')
       else
