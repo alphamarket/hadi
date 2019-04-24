@@ -10,6 +10,12 @@ class CDsController extends BaseController
   list_action: (args) ->
     $.response_success db.select 'cds'
 
+  report_action: (args) ->
+    $.response_success db.select 'cds',
+      (item) ->
+        # find by unit id
+        (item.unit || "").toString() is args.unit
+        
   update_action: (data) ->
     out = null
     db.update 'cds',

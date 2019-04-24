@@ -75,6 +75,8 @@ window.refresh_events = () => {
     window.pushpins = M.Pushpin.init(document.querySelectorAll('.pushpin'), { });
     // init all selects
     window.selects = M.FormSelect.init(document.querySelectorAll('select'), { });
+    // init all tabs
+    window.tabs = M.Tabs.init(document.querySelectorAll('.tabs'), { });
     // enable row-bundled table highlighting
     $('table.highlight-bundled > tbody > tr[row-id]').hover(function() {
       $(this)

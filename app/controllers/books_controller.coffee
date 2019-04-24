@@ -10,6 +10,12 @@ class BooksController extends BaseController
   list_action: (args) ->
     $.response_success db.select 'books'
 
+  report_action: (args) ->
+    $.response_success db.select 'books',
+      (item) ->
+        # find by unit id
+        (item.unit || "").toString() is args.unit
+        
   update_action: (data) ->
     out = null
     db.update 'books',

@@ -10,6 +10,12 @@ class BannersController extends BaseController
   list_action: (args) ->
     $.response_success db.select 'banners'
 
+  report_action: (args) ->
+    $.response_success db.select 'banners',
+      (item) ->
+        # find by unit id
+        (item.unit || "").toString() is args.unit
+
   update_action: (data) ->
     out = null
     db.update 'banners',

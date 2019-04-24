@@ -1,0 +1,310 @@
+<%- include(app_path + "/views/layouts/header.ejs") %>
+<div class="font-56 mb-15 mt-30" style="color: #dc3545">
+  <i class="font-56 material-icons" style="position: relative; top: 20px;">playlist_add_check</i>
+  گزارش گیری
+  <span class="limited_version"></span>
+  <hr class="m-0 height-2" style="background-color: #dc3545" />
+</div>
+<p>
+  <span class="fa fa-search"></span> برای مشاهده گزارش براساسی هر یک از موارد زیر روی گزینه مورد نظر کلیک کنید.
+</p>
+<ul id="tabs-swipe-demo" class="tabs right">
+  <li class="tab col s6"><a href="#tab-swipe-2">گزارش گیری جزء</a></li>
+  <li class="tab col s6"><a href="#tab-swipe-1" class=active>گزارش گیری کلی</a></li>
+</ul>
+
+<div class="row p-40 center-align" style='padding-top: 10px !important' id="tab-swipe-1">
+  <div class="col s12">
+    <p class="right-align pt-20">در این قسمت گزارش کلی از کلیه اقلام عقیدتی-سیاسی ارائه شده است. برای مشاهده گزارش به تفکیک یگان‌ها به قسمت «گزارش گیری جزء» در همین بخش مراجعه کنید.</p>
+    <table class="right-align">
+      <tbody>
+        <tr banners>
+          <td rowspan="3">بنرها</td>
+        </tr>
+        <tr class="green-text">
+          <td>تعداد تحویلی‌ها:</td>
+          <td banners-passed></td>
+        </tr>
+        <tr class="red-text">
+          <td>تعدادی که باید عودت داده شوند:</td>
+          <td banners-should-return should-return></td>
+        </tr>
+        <tr books>
+          <td rowspan="3">کتاب‌ها</td>
+        </tr>
+        <tr class="green-text">
+          <td>تعداد تحویلی‌ها:</td>
+          <td books-passed></td>
+        </tr>
+        <tr class="red-text">
+          <td>تعدادی که باید عودت داده شوند:</td>
+          <td books-should-return should-return></td>
+        </tr>
+        <tr cds>
+          <td rowspan="3">لوح‌های فشرده</td>
+        </tr>
+        <tr class="green-text">
+          <td>تعداد تحویلی‌ها:</td>
+          <td cds-passed></td>
+        </tr>
+        <tr class="red-text">
+          <td>تعدادی که باید عودت داده شوند:</td>
+          <td cds-should-return should-return></td>
+        </tr>
+        <tr sundries>
+          <td rowspan="3">اقلام فرهنگی</td>
+        </tr>
+        <tr class="green-text">
+          <td>تعداد تحویلی‌ها:</td>
+          <td sundries-passed></td>
+        </tr>
+        <tr class="red-text">
+          <td>تعدادی که باید عودت داده شوند:</td>
+          <td sundries-should-return should-return></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row p-40 center-align" style='display:none; padding-top: 10px !important' id="tab-swipe-2">
+  <div class="col s12">
+    <div class="row">
+      <div class="input-field col m6 left-align hide">
+        <a class="waves-effect waves-light btn modal-trigger" href="#new-unit-modal" style="position: relative; top: 20px"><span class="fa fa-plus"></span> یگان جدید</a>
+      </div>
+      <div class="input-field col m6 offset-m6">
+        <i class="material-icons prefix">search</i>
+        <input id="units_search" type="text" class="validate" class="mr-20" placeholder="عبارت مورد نظر خود را جستجو کنید.">
+      </div>
+    </div>
+  </div>
+  <div class="col s12 mt-20 pt-20 hide right-align">
+    <div class="row">
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" data-target=expired />
+          <span>بنرهایی که باید تحویل داده شوند</span>
+        </label>
+      </div>
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" data-target=passed />
+          <span>بنرهای تحویل داده شده</span>
+        </label>
+      </div>
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" data-target=not_passed />
+          <span>بنرهای موجود</span>
+        </label>
+      </div>
+      <div class="col s3">
+        <label>
+          <input name="existance" type="radio" checked data-target=all />
+          <span>همه موارد</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="col s12 mt-20">
+    <div id="units" class="center-align pr-20">
+      <table class="right-align highlight-bundled">
+        <thead>
+          <tr>
+            <th class="width-60">ردیف</th>
+            <th>عنوان</th>
+            <th>شماره تماس</th>
+            <th>آخرین ویرایش</th>
+            <th class="width-190">گزینه‌ها</th>
+        </thead>
+        <tbody>
+          <tr><td colspan="7"><center><span class="fa fa-spin fa-spinner"></span> در حال بارگذاری، لطفا شکیبا باشید...</center></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="report-unit-modal" class="modal">
+    <div class="modal-content right-align">
+      <h4 class="blue-text lighten-1 border-bottom pb-10 modal-title"><i class="material-icons font-46">playlist_add_check</i> <span style="position: relative; top: -15px">گزارش گیری از <strong title></strong></span></h4>
+      <table class="right-align">
+        <tbody>
+          <tr banners>
+            <td rowspan="3">بنرها</td>
+          </tr>
+          <tr class="green-text">
+            <td>تعداد تحویلی‌ها:</td>
+            <td banners-passed></td>
+          </tr>
+          <tr class="red-text">
+            <td>تعدادی که باید عودت داده شوند:</td>
+            <td banners-should-return should-return></td>
+          </tr>
+          <tr books>
+            <td rowspan="3">کتاب‌ها</td>
+          </tr>
+          <tr class="green-text">
+            <td>تعداد تحویلی‌ها:</td>
+            <td books-passed></td>
+          </tr>
+          <tr class="red-text">
+            <td>تعدادی که باید عودت داده شوند:</td>
+            <td books-should-return should-return></td>
+          </tr>
+          <tr cds>
+            <td rowspan="3">لوح‌های فشرده</td>
+          </tr>
+          <tr class="green-text">
+            <td>تعداد تحویلی‌ها:</td>
+            <td cds-passed></td>
+          </tr>
+          <tr class="red-text">
+            <td>تعدادی که باید عودت داده شوند:</td>
+            <td cds-should-return should-return></td>
+          </tr>
+          <tr sundries>
+            <td rowspan="3">اقلام فرهنگی</td>
+          </tr>
+          <tr class="green-text">
+            <td>تعداد تحویلی‌ها:</td>
+            <td sundries-passed></td>
+          </tr>
+          <tr class="red-text">
+            <td>تعدادی که باید عودت داده شوند:</td>
+            <td sundries-should-return should-return></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var units = []
+  var properties = ["banners", "books", "cds", "sundries"]
+  function render_reports($el, reports, categories) {
+    // process data for each categories
+    categories.forEach(function(section, index) {
+      $el.find(`[${section}-passed]`).html(to_persian_numeric(formatMoney(reports[section].length)) + " عدد")
+      var should_return = reports[section].filter((_b) => {
+        var ret_date = moment(new Date(_b.return_date))
+        return _b.return_date && ret_date.toString().toLowerCase() !== "invalid date" && ret_date < moment()
+      }).length
+      $el.find(`[${section}-should-return]`).html(to_persian_numeric(formatMoney(should_return)) + " عدد");
+      if(should_return == 0)
+        $el.find(`[${section}-should-return]`).closest('tr').removeClass('red-text')
+      else
+        $el.find(`[${section}]`).addClass('red-text')
+    });
+  }
+  function add_unit_to_table(unit) {
+    var $cont = $("#units table tbody")
+    $('table tr[not-found]').remove()
+    $cont.append(`<tr row-id="u${unit.id}" data-id="${unit.id}"></tr>`)
+    $cont = $cont.find('tr:last')
+    $cont.append("<td rowspan=2>" + to_persian_numeric(unit.id) + "</td>")
+    $cont.append("<td title>" + to_persian_numeric(unit.title) + "</td>")
+    $cont.append("<td tel>" + (unit.tel.length ? to_persian_numeric(unit.tel) : "-" ) + "</td>")
+    $cont.append("<td updated_at>" + to_persian_numeric(moment(new Date(unit.updated_at)).format('jYYYY/jMM/jDD ~ HH:mm')) + "</td>")
+    $cont.append("<td rowspan=2 ><a href='#!view-report' class='center-align'><i class='material-icons' style='position: relative; top: 5px;'>pageview</i> <span style='position: relative; top: -3px'>مشاهده گزارش</span></a></td>")
+    $cont.closest('tbody').append("<tr row-id='u" + unit.id + "' data-id='" + unit.id + "'><td colspan=3><b>آدرس:</b> <span address>" + (unit.address.length ? to_persian_numeric(unit.address) : "-" ) + "</span></td></tr>")
+    $cont.data('rel-obj', unit)
+    $cont.find('a[href="#!view-report"]').click(() => {
+      var modal = modals[0]
+      var unit = clone(units[units.findIndex(o => { return o.id === $cont.data('rel-obj').id })])
+      var prev_onclose = modal.options.onCloseEnd
+      var prev_action = modal.$el.find('form').attr('action')
+      var prev_callback = modal.$el.find('form').attr('callback')
+      var reports = { }
+      // fetch reports by categories
+      properties.forEach(function(section, index) {
+        send_request(`/${section}/report`, { unit: unit.id }, function(resp) {
+          if(validate_response(resp))
+            reports[section] = response_data(resp)
+        })
+      })
+      // process fetched reports
+      var process_reports = function() {
+        // wait unit things gets done
+        if(properties.length > Object.keys(reports).length) {
+          setTimeout(process_reports, 500)
+          return
+        }
+        modal.$el.find('[title]').html(to_persian_numeric(unit.title))
+        render_reports(modal.$el, reports, properties)
+      };
+      setTimeout(process_reports, 500)
+      modal.open()
+    })
+    return $cont
+  }
+  $(function() {
+    setTimeout(function() {
+      /**
+      * /GENERAL REPORT FETCH/
+      */
+      // fetch reports by categories
+      properties.forEach(function(section, index) {
+        send_request(`/${section}/list`, { }, function(resp) {
+          if(validate_response(resp))
+            reports[section] = response_data(resp)
+        })
+      })
+      var reports = { }
+      // process fetched reports
+      var process_reports = function() {
+        // wait unit things gets done
+        if(properties.length > Object.keys(reports).length) {
+          setTimeout(process_reports, 500)
+          return
+        }
+        render_reports($('#tab-swipe-1'), reports, properties)
+      };
+      setTimeout(process_reports, 500)
+      /**
+      * /END OF GENERAL REPORT FETCH/
+      */
+      send_request("/units/list", { }, function(resp) {
+        if(validate_response(resp)) {
+          units = response_data(resp)
+          $("#units table tbody").html('')
+          for (var unit of units) { add_unit_to_table(unit) }
+          // if nothing found!
+          if(!units.length)
+            $("#units table tbody").append('<tr not-found><td colspan=5><center><span class="fa fa-times"></span> هیچ داده‌ای یافت نشد!</center></td></tr>')
+        }
+      }, true)
+      var units_search_timeout = null
+      $('#units_search').off('keyup').on('keyup', () => {
+        clearTimeout(units_search_timeout)
+        if($('#units_search').val().trim().length === 0) {
+          $("#units table tbody").html('')
+          for (var unit of units) { add_unit_to_table(unit) }
+          return
+        }
+        units_search_timeout = setTimeout(() => {
+          var rex = new RegExp("(" + to_persian_numeric($('#units_search').val().trim().regex_escape()).split(' ').join("|") + ")", "gi")
+          found = units.filter((e) => {
+            for (var key in e) if(to_persian_numeric(e[key]).toString().match(rex)) return true
+            return false
+          })
+          found = found.map((e) => {
+            e = clone(e)
+            for (var key in e)
+              if(typeof(e[key]) !== "undefined" && e[key] && typeof(e[key]) === "string")
+                e[key] = e[key].toString().replace(rex, "<span class='highlight'>$1</span>")
+            return e
+          })
+          $("#units table tbody").html('')
+          for (var unit of found) { add_unit_to_table(unit) }
+          if(!found.length) {
+            $("#units table tbody").append('<tr><td colspan=5 class="center-align bold"><span class="fa fa-times"></span> موردی یافت نشد!</td></tr>')
+          }
+        }, 500);
+      })
+      $('.tabs tab a.active').click();
+    }, 100) // setTimeout
+  })
+</script>
+<%- include(app_path + "/views/layouts/footer.ejs") %>

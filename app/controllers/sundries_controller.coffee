@@ -10,6 +10,12 @@ class SundriesController extends BaseController
   list_action: (args) ->
     $.response_success db.select 'sundries'
 
+  report_action: (args) ->
+    $.response_success db.select 'sundries',
+      (item) ->
+        # find by unit id
+        (item.unit || "").toString() is args.unit
+        
   update_action: (data) ->
     out = null
     db.update 'sundries',
